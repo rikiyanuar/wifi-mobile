@@ -13,7 +13,7 @@ final instance = GetIt.instance;
 class AppModule {
   static Map<String, Widget Function(BuildContext)> router = {
     MainRoutes.dioLog: (context) => HttpLogListWidget(),
-    MainRoutes.splashScreen: (context) => const SplashScreen(),
+    AppRoutes.splashScreen: (context) => const SplashScreen(),
   };
 
   injector() {
@@ -101,7 +101,7 @@ class _JurnalAppState extends State<JurnalApp> {
                   child: widget ?? Container(),
                 );
               },
-              initialRoute: MainRoutes.splashScreen,
+              initialRoute: AppRoutes.splashScreen,
               routes: AppModule.router,
             );
           },

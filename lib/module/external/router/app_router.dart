@@ -2,6 +2,7 @@ import 'package:flutter_core/core.dart';
 
 class AppRoutes {
   static const String root = MainRoutes.penjualanModule;
+  static const String splashScreen = "/splashScreen";
 }
 
 abstract class AppRouter {
@@ -19,5 +20,5 @@ class AppRouterImpl extends AppRouter {
 
   @override
   Future<void> goToSplashScreen() =>
-      AppNavigator.pushNamedAndRemoveUntil(MainRoutes.splashScreen);
+      AppNavigator.pushNamedAndRemoveUntil(AppRoutes.splashScreen);
 }
