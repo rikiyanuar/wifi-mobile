@@ -1,0 +1,106 @@
+{
+  "project_info": {
+    "project_number": "181926580387",
+    "project_id": "jurnal-apps-dev",
+    "storage_bucket": "jurnal-apps-dev.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:181926580387:android:49eadb67cfe7a3be632f16",
+        "android_client_info": {
+          "package_name": "com.jurnalapp.penjualan.dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "181926580387-4r568di15rcmccr4iuaf11f8qtsivki4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.jurnalapp.penjualan.dev",
+            "certificate_hash": "b8ed9b83131f7882cc6fc0cc8ce5fb005c205211"
+          }
+        },
+        {
+          "client_id": "181926580387-gqomlfg4pu6aemmonm1det20iip20rm2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.jurnalapp.penjualan.dev",
+            "certificate_hash": "3f50d117358ff53b9b53b670df7137f8b4067412"
+          }
+        },
+        {
+          "client_id": "181926580387-v9unml5gab80c5n24qqsf3rl65839hjv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD5WXdBbd6ACNbrIk5_MfCWOGUzwVQFgvo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "181926580387-v9unml5gab80c5n24qqsf3rl65839hjv.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "181926580387-fc29kq3l6uaedi0o62t3rkk9sohecsnj.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.jurnalapp.penjualan.dev"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:181926580387:android:b12ee6e31b1cbe34632f16",
+        "android_client_info": {
+          "package_name": "com.jurnalapp.wifiapp.dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "181926580387-ne0mojqhlekbmjsn43qukjucs328u39m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.jurnalapp.wifiapp.dev",
+            "certificate_hash": "ce39d9eff157b5a6c9797da84420c1df0005a6f9"
+          }
+        },
+        {
+          "client_id": "181926580387-v9unml5gab80c5n24qqsf3rl65839hjv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD5WXdBbd6ACNbrIk5_MfCWOGUzwVQFgvo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "181926580387-v9unml5gab80c5n24qqsf3rl65839hjv.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "181926580387-fc29kq3l6uaedi0o62t3rkk9sohecsnj.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.jurnalapp.penjualan.dev"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

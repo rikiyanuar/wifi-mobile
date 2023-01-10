@@ -1,115 +1,150 @@
+import 'package:flutter_core/core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_core/utils/ssl_pinning/ssl_pinning.dart';
+import 'package:flutter_libraries/libraries.dart';
+import 'package:wifiapp/module/presentation/screen/splash_screen.dart';
 
-void main() {
-  runApp(const MyApp());
-}
+import 'generated/l10n.dart';
+import 'module/external/router/app_router.dart';
+import 'module/external/utils/functions.dart';
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+final instance = GetIt.instance;
 
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
+class AppModule {
+  static Map<String, Widget Function(BuildContext)> router = {
+    MainRoutes.dioLog: (context) => HttpLogListWidget(),
+    MainRoutes.splashScreen: (context) => const SplashScreen(),
+  };
+
+  injector() {
+    _utilsBindings();
+    _routerBindings();
+  }
+
+  _utilsBindings() {
+    instance.registerLazySingleton(
+      () => GetIt.I.get<DioClient>().dio,
+    );
+    instance.registerLazySingleton<SslPinning>(
+      () => SslPinningImpl(),
+    );
+    instance.registerLazySingleton<ServiceHelper>(
+      () => ServiceHelperImpl(
+        dio: GetIt.I.get<DioClient>().dio,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+    );
+    instance.registerLazySingleton<JurnalSharedPreferences>(
+      () => JurnalSharedPreferencesImpl(),
+    );
+    instance.registerLazySingleton(
+      () => DioClient(
+        jurnalSharedPreferences: GetIt.I.get<JurnalSharedPreferences>(),
+        environment: FlavorBaseUrlConfig.instance!.appEnvironment,
+        sslPinning: GetIt.I.get<SslPinning>(),
+        authLogout: () => JurnalAppFunctions.handleLogout(),
+        authRefreshToken: () => JurnalAppFunctions.handleLogout(),
+      ),
+    );
+  }
+
+  _routerBindings() {
+    instance.registerLazySingleton<AppRouter>(
+      () => AppRouterImpl(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
+class JurnalApp extends StatefulWidget {
+  const JurnalApp({Key? key}) : super(key: key);
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<JurnalApp> createState() => _JurnalAppState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class _JurnalAppState extends State<JurnalApp> {
+  final GlobalKey _parentKey = GlobalKey();
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
+  @override
+  void initState() {
+    _setLocale();
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
+    return FlavorBanner(
+      text: FlavorConfig.of(context).appEnvironment.name,
+      location: BannerLocation.bottomEnd,
+      visible: FlavorConfig.of(context).isShowBanner,
+      child: Stack(key: _parentKey, children: [
+        ScreenUtilInit(
+          designSize: const Size(360, 640),
+          builder: (context, _) {
+            return MaterialApp(
+              navigatorKey: AppNavigator.navigatorKey,
+              debugShowCheckedModeBanner: false,
+              title: FlavorConfig.of(context).appName,
+              localizationsDelegates: const [
+                S.delegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+              ],
+              supportedLocales: S.delegate.supportedLocales,
+              theme: ThemeData(
+                visualDensity: VisualDensity.adaptivePlatformDensity,
+                fontFamily: TextStyles.fontFamily,
+              ),
+              builder: (context, widget) {
+                return MediaQuery(
+                  data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+                  child: widget ?? Container(),
+                );
+              },
+              initialRoute: MainRoutes.splashScreen,
+              routes: AppModule.router,
+            );
+          },
+        ),
+        _buildCheckLogButton(context),
+      ]),
+    );
+  }
+
+  Visibility _buildCheckLogButton(BuildContext context) {
+    return Visibility(
+      visible: FlavorConfig.of(context).isShowBanner,
+      child: DraggableFloatingActionButton(
+        initialOffset: const Offset(50, 50),
+        onPressed: () => AppNavigator.pushNamed(MainRoutes.dioLog),
+        parentKey: _parentKey,
+        child: Container(
+          width: 60,
+          height: 60,
+          decoration: ShapeDecoration(
+            shape: const CircleBorder(),
+            color: Colors.pink.withOpacity(0.8),
+            shadows: const [
+              BoxShadow(
+                color: ShadowColors.shadowTwo,
+                offset: Offset(0, 3),
+                blurRadius: 6,
+                spreadRadius: 0,
+              )
+            ],
+          ),
+          child: const Icon(
+            Icons.network_check,
+            color: Colors.white,
+          ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
+  }
+
+  _setLocale() async {
+    final currentLocale =
+        await GetIt.I.get<JurnalSharedPreferences>().getLocale();
+    await S.load(Locale(currentLocale));
   }
 }
