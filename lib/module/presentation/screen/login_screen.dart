@@ -1,0 +1,99 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_core/core.dart';
+import 'package:flutter_libraries/libraries.dart';
+import 'package:flutter_libraries/provider.dart';
+import 'package:wifiapp/module/external/router/app_router.dart';
+
+import '../view_model/login_view_model.dart';
+import '../widget/background.dart';
+
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  LoginViewModel? _viewModel;
+
+  @override
+  void initState() {
+    _viewModel = LoginViewModel();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<LoginViewModel>(
+            create: (context) => _viewModel!),
+      ],
+      child: Consumer<LoginViewModel>(builder: (context, viewModel, builder) {
+        return Scaffold(
+          body: Background(
+            widget: Column(mainAxisSize: MainAxisSize.min, children: [
+              SizedBox(height: MediaQuery.of(context).size.height / 6),
+              Text("LOGO WIFI APP", style: TextStyles.b16White),
+              Container(
+                margin: const EdgeInsets.all(24),
+                padding: const EdgeInsets.all(16),
+                decoration: const BoxDecoration(
+                  color: AppColors.white,
+                  borderRadius: BorderRadius.all(Radius.circular(12)),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black12,
+                      blurRadius: 6,
+                      spreadRadius: 6,
+                    ),
+                  ],
+                ),
+                child: ReactiveForm(
+                  formGroup: _viewModel!.form,
+                  child: _buildForm(),
+                ),
+              )
+            ]),
+          ),
+        );
+      }),
+    );
+  }
+
+  Widget _buildForm() {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 12),
+        Text("NIK", style: TextStyles.r14),
+        const SizedBox(height: 10),
+        GeneralInputText(
+          key: const Key("TxtNIK"),
+          formControlName: LoginViewModel.emailKey,
+          validationMessages: _viewModel!.formErrorMessages,
+          hintText: "Ex: 370808170819450005",
+          textInputType: TextInputType.emailAddress,
+        ),
+        const SizedBox(height: 16),
+        Text("Password", style: TextStyles.r14),
+        const SizedBox(height: 10),
+        GeneralInputText(
+          key: const Key("TxtPassword"),
+          formControlName: LoginViewModel.passwordKey,
+          validationMessages: _viewModel!.formErrorMessages,
+          hintText: "Password",
+          isPasswordType: true,
+        ),
+        const SizedBox(height: 38),
+        GeneralButton(
+          text: "Login",
+          onTap: () => GetIt.I.get<AppRouter>().goToLayout(null),
+        ),
+        const SizedBox(height: 18)
+      ],
+    );
+  }
+}

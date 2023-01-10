@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_core/core.dart';
 import 'package:flutter_libraries/libraries.dart';
-import 'package:wifiapp/module/external/constant/app_environment.dart';
+import 'package:wifiapp/module/external/external.dart';
 
 import 'main.dart';
 

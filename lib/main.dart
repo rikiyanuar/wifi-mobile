@@ -5,8 +5,9 @@ import 'package:flutter_libraries/libraries.dart';
 import 'package:wifiapp/module/presentation/screen/splash_screen.dart';
 
 import 'generated/l10n.dart';
-import 'module/external/router/app_router.dart';
-import 'module/external/utils/functions.dart';
+import 'module/external/external.dart';
+import 'module/presentation/screen/layout_screen.dart';
+import 'module/presentation/screen/login_screen.dart';
 
 final instance = GetIt.instance;
 
@@ -14,6 +15,8 @@ class AppModule {
   static Map<String, Widget Function(BuildContext)> router = {
     MainRoutes.dioLog: (context) => HttpLogListWidget(),
     AppRoutes.splashScreen: (context) => const SplashScreen(),
+    AppRoutes.loginScreen: (context) => const LoginScreen(),
+    AppRoutes.layoutScreen: (context) => const LayoutScreen(),
   };
 
   injector() {
