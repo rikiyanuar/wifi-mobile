@@ -9,7 +9,9 @@ import '../../view_model/general_state.dart';
 import '../../widget/background.dart';
 
 class AccountScreen extends StatefulWidget {
-  const AccountScreen({super.key});
+  final Function(int value) changeIndex;
+
+  const AccountScreen({super.key, required this.changeIndex});
 
   @override
   State<AccountScreen> createState() => _AccountScreenState();
@@ -37,123 +39,7 @@ class _AccountScreenState extends State<AccountScreen> {
             ),
             widget: LoadingIndicator(
               isLoading: viewModel.isLoading,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 14),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 14),
-                    child: Text(
-                      "Hi, ${viewModel.nama}",
-                      style: TextStyles.m18.copyWith(color: AppColors.white),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 14),
-                    child: Text(
-                      viewModel.dataAccount.nohp,
-                      style: TextStyles.r14.copyWith(color: AppColors.white),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Container(
-                          decoration: const BoxDecoration(
-                            color: AppColors.white,
-                            borderRadius: BorderRadius.all(Radius.circular(8)),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black12,
-                                blurRadius: 6,
-                                spreadRadius: 6,
-                              ),
-                            ],
-                          ),
-                          margin: const EdgeInsets.only(left: 14, right: 7),
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          height: 70,
-                          child: Row(children: [
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text("Poin anda",
-                                      style: TextStyles.r12Black3),
-                                  const SizedBox(height: 4),
-                                  Text("1400", style: TextStyles.m12),
-                                ],
-                              ),
-                            ),
-                            const Icon(
-                              Icons.chevron_right,
-                              color: AppColors.magenta1,
-                            ),
-                          ]),
-                        ),
-                      ),
-                      Expanded(
-                        child: Container(
-                          decoration: const BoxDecoration(
-                            color: AppColors.white,
-                            borderRadius: BorderRadius.all(Radius.circular(8)),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black12,
-                                blurRadius: 6,
-                                spreadRadius: 6,
-                              ),
-                            ],
-                          ),
-                          margin: const EdgeInsets.only(right: 14, left: 7),
-                          padding: const EdgeInsets.symmetric(horizontal: 14),
-                          height: 70,
-                          child: Row(children: [
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text("Paket Internet",
-                                      style: TextStyles.r12Black3),
-                                  const SizedBox(height: 4),
-                                  Text("Paket 100rb", style: TextStyles.m12),
-                                ],
-                              ),
-                            ),
-                            const Icon(
-                              Icons.chevron_right,
-                              color: AppColors.magenta1,
-                            ),
-                          ]),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  Expanded(
-                    child: ClipRRect(
-                      borderRadius:
-                          const BorderRadius.vertical(top: Radius.circular(10)),
-                      child: Container(
-                        width: 1.sw,
-                        color: AppColors.white,
-                        padding: const EdgeInsets.symmetric(horizontal: 14),
-                        child: SingleChildScrollView(
-                          child: Column(
-                            children: [
-                              _buildData(),
-                              _buildLogout(),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  )
-                ],
-              ),
+              child: _buildBody(),
             ),
           );
         },
@@ -161,11 +47,153 @@ class _AccountScreenState extends State<AccountScreen> {
     );
   }
 
-  _buildData() {
-    return Container(height: 200);
+  Widget _buildBody() {
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      const SizedBox(height: 14),
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 14),
+        child: Text(
+          "Hi, ${_viewModel!.nama}",
+          style: TextStyles.m18.copyWith(color: AppColors.white),
+        ),
+      ),
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 14),
+        child: Text(
+          _viewModel!.dataAccount.nohp,
+          style: TextStyles.r14.copyWith(color: AppColors.white),
+        ),
+      ),
+      const SizedBox(height: 20),
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 14),
+        child: Row(children: [
+          _buildCard(
+            title: "Poin Anda",
+            value: "1400",
+            onTap: () => widget.changeIndex(1),
+          ),
+          const SizedBox(
+            width: 14,
+          ),
+          _buildCard(
+            title: "Paket Internet",
+            value: "Paket 100rb",
+            onTap: () => {},
+          ),
+        ]),
+      ),
+      const SizedBox(height: 16),
+      Expanded(
+        child: ClipRRect(
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(8)),
+          child: Container(
+            width: 1.sw,
+            color: AppColors.white,
+            padding: const EdgeInsets.symmetric(horizontal: 14),
+            child: SingleChildScrollView(
+              child: _buildList(),
+            ),
+          ),
+        ),
+      )
+    ]);
   }
 
-  _buildLogout() {
+  Widget _buildList() {
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      const SizedBox(height: 16),
+      Text(
+        "PENGATURAN AKUN",
+        style: TextStyles.r12.copyWith(
+          fontWeight: FontWeight.w600,
+          color: AppColors.neutral60,
+        ),
+      ),
+      const SizedBox(height: 6),
+      _buildListTile("Ubah Profil"),
+      const Divider(height: 1),
+      _buildListTile("Ubah Password"),
+      const SizedBox(height: 16),
+      Text(
+        "LAINNYA",
+        style: TextStyles.r11.copyWith(
+          fontWeight: FontWeight.w600,
+          color: AppColors.neutral60,
+        ),
+      ),
+      const SizedBox(height: 6),
+      _buildListTile("Kebijakan Privasi"),
+      const Divider(height: 1),
+      _buildListTile("Kirim Masukan"),
+      const Divider(height: 1),
+      _buildListTile(
+        "WIFI App",
+        trailing: Padding(
+          padding: const EdgeInsets.only(right: 6),
+          child: Text("v1.0.0", style: TextStyles.l11Black3),
+        ),
+      ),
+      const SizedBox(height: 32),
+      _buildLogout(),
+    ]);
+  }
+
+  ListTile _buildListTile(String title, {Function()? onTap, Widget? trailing}) {
+    return ListTile(
+      dense: true,
+      title: Text(title, style: TextStyles.r13),
+      trailing: trailing ??
+          const Icon(
+            Icons.chevron_right,
+            color: AppColors.magenta1,
+          ),
+      onTap: onTap,
+      contentPadding: EdgeInsets.zero,
+    );
+  }
+
+  Widget _buildCard({
+    required String title,
+    required String value,
+    required Function() onTap,
+  }) {
+    return Expanded(
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          decoration: const BoxDecoration(
+            color: AppColors.white,
+            borderRadius: BorderRadius.all(Radius.circular(4)),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          height: 70,
+          child: Row(children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(title, style: TextStyles.r11Black3),
+                  const SizedBox(height: 4),
+                  Text(
+                    value,
+                    style: TextStyles.r13.copyWith(fontWeight: FontWeight.w600),
+                  ),
+                ],
+              ),
+            ),
+            const Icon(
+              Icons.chevron_right,
+              color: AppColors.magenta1,
+            ),
+          ]),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLogout() {
     return GeneralButton(
       text: "Keluar",
       color: AppColors.red1,

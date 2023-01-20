@@ -75,9 +75,15 @@ class _LayoutScreenState extends State<LayoutScreen> {
     } else if (_navigationIndex == 1) {
       return const HistoryScreen();
     } else if (_navigationIndex == 2) {
-      return const AccountScreen();
+      return AccountScreen(changeIndex: _changeIndex);
     }
 
     return const DashboardScreen();
+  }
+
+  _changeIndex(int value) {
+    setState(() {
+      _navigationIndex = value;
+    });
   }
 }
