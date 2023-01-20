@@ -3,6 +3,7 @@ import 'package:flutter_core/core.dart';
 import 'package:flutter_libraries/libraries.dart';
 import 'package:flutter_libraries/provider.dart';
 import 'package:wifiapp/module/external/router/app_router.dart';
+import 'package:wifiapp/module/presentation/view_model/general_state.dart';
 
 import '../view_model/login_view_model.dart';
 import '../widget/background.dart';
@@ -32,30 +33,36 @@ class _LoginScreenState extends State<LoginScreen> {
       ],
       child: Consumer<LoginViewModel>(builder: (context, viewModel, builder) {
         return Scaffold(
-          body: Background(
-            widget: Column(mainAxisSize: MainAxisSize.min, children: [
-              SizedBox(height: MediaQuery.of(context).size.height / 6),
-              Text("LOGO WIFI APP", style: TextStyles.b16White),
-              Container(
-                margin: const EdgeInsets.all(24),
-                padding: const EdgeInsets.all(16),
-                decoration: const BoxDecoration(
-                  color: AppColors.white,
-                  borderRadius: BorderRadius.all(Radius.circular(12)),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black12,
-                      blurRadius: 6,
-                      spreadRadius: 6,
+          body: LoadingIndicator(
+            isLoading: viewModel.isLoading,
+            child: Background(
+              widget: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("LOGO WIFI APP", style: TextStyles.b16White),
+                  Container(
+                    margin: const EdgeInsets.all(24),
+                    padding: const EdgeInsets.all(16),
+                    decoration: const BoxDecoration(
+                      color: AppColors.white,
+                      borderRadius: BorderRadius.all(Radius.circular(12)),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black12,
+                          blurRadius: 6,
+                          spreadRadius: 6,
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-                child: ReactiveForm(
-                  formGroup: _viewModel!.form,
-                  child: _buildForm(),
-                ),
-              )
-            ]),
+                    child: ReactiveForm(
+                      formGroup: _viewModel!.form,
+                      child: _buildForm(),
+                    ),
+                  )
+                ],
+              ),
+            ),
           ),
         );
       }),
@@ -90,10 +97,27 @@ class _LoginScreenState extends State<LoginScreen> {
         const SizedBox(height: 38),
         GeneralButton(
           text: "Login",
-          onTap: () => GetIt.I.get<AppRouter>().goToLayout(null),
+          onTap: () => _login(),
         ),
         const SizedBox(height: 18)
       ],
     );
+  }
+
+  _login() async {
+    if (_viewModel!.form.invalid) {
+      StandardToast.error(context, "Lengkapi form login");
+
+      return;
+    }
+
+    final state = await _viewModel!.login();
+
+    if (!mounted) return;
+    if (state is GeneralErrorState) {
+      StandardToast.showClientErrorToast(context, message: state.message);
+    } else if (state is GeneralSuccessState) {
+      GetIt.I.get<AppRouter>().goToLayout(null);
+    }
   }
 }

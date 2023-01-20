@@ -2,61 +2,47 @@ import 'package:flutter/material.dart';
 import 'package:flutter_core/core.dart';
 import 'package:flutter_libraries/libraries.dart';
 
+import 'background.dart';
+
 class CustomAppBar extends StatelessWidget {
-  final AppBar? appBar;
   final String title;
   final Widget? leading;
-  final PreferredSizeWidget? bottom;
   final Widget? body;
   final Widget? action;
-  final Color? backgroundColor;
-  final double? elevation;
+  final double paddingTop;
 
-  CustomAppBar({
+  const CustomAppBar({
     Key? key,
-    this.appBar,
     required this.title,
     this.leading,
-    this.bottom,
     this.body,
     this.action,
-    this.backgroundColor = Colors.transparent,
-    this.elevation = 0,
+    this.paddingTop = 4,
   }) : super(key: key);
-
-  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: scaffoldKey,
-      appBar: appBar ??
-          AppBar(
-            title: Text(title),
-            leading: leading ??
-                IconButton(
-                  onPressed: () => AppNavigator.pop(),
-                  icon: const Icon(Ionicons.chevron_back_outline),
-                ),
-            bottom: bottom,
-            elevation: elevation,
-            backgroundColor: backgroundColor,
-            actions: [
-              action ??
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Ionicons.help_circle_outline),
-                  ),
-            ],
-          ),
-      body: ClipRRect(
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-        child: Container(
-          width: 1.sw,
-          color: AppColors.white,
-          child: body,
+    return Background(
+      padding: EdgeInsets.zero,
+      widget: Column(children: [
+        AppBar(
+          backgroundColor: Colors.transparent,
+          title: Text(title),
+          elevation: 0,
+          leading: leading,
         ),
-      ),
+        Expanded(
+          child: ClipRRect(
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+            child: Container(
+              width: 1.sw,
+              color: AppColors.white,
+              padding: EdgeInsets.only(top: paddingTop),
+              child: body,
+            ),
+          ),
+        )
+      ]),
     );
   }
 }

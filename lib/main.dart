@@ -109,14 +109,14 @@ class _JurnalAppState extends State<JurnalApp> {
             );
           },
         ),
-        _buildCheckLogButton(context),
+        _buildCheckLogButton(),
       ]),
     );
   }
 
-  Visibility _buildCheckLogButton(BuildContext context) {
+  Visibility _buildCheckLogButton() {
     return Visibility(
-      visible: FlavorConfig.of(context).isShowBanner,
+      visible: false,
       child: DraggableFloatingActionButton(
         initialOffset: const Offset(50, 50),
         onPressed: () => AppNavigator.pushNamed(MainRoutes.dioLog),

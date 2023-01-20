@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_core/core.dart';
-import 'package:flutter_libraries/provider.dart';
+import 'package:wifiapp/module/presentation/screen/dashboard/dashboard_screen.dart';
 
-import '../view_model/layout_view_model.dart';
+import 'account/account_screen.dart';
+import 'history/history_screen.dart';
 
 class LayoutScreen extends StatefulWidget {
   final int? defaultIndexMenu;
@@ -14,7 +15,6 @@ class LayoutScreen extends StatefulWidget {
 }
 
 class _LayoutScreenState extends State<LayoutScreen> {
-  LayoutViewModel? _viewModel;
   int _navigationIndex = 0;
 
   @override
@@ -24,22 +24,15 @@ class _LayoutScreenState extends State<LayoutScreen> {
     } else {
       _navigationIndex = widget.defaultIndexMenu!;
     }
-    _viewModel = LayoutViewModel();
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider<LayoutViewModel>(
-            create: (context) => _viewModel!),
-      ],
-      child: Consumer<LayoutViewModel>(builder: (context, viewModel, builder) {
-        return Scaffold(
-          bottomNavigationBar: _buildNavigation(),
-        );
-      }),
+    return Scaffold(
+      body: _getBody(),
+      bottomNavigationBar: _buildNavigation(),
     );
   }
 
@@ -74,5 +67,17 @@ class _LayoutScreenState extends State<LayoutScreen> {
         ),
       ],
     );
+  }
+
+  Widget _getBody() {
+    if (_navigationIndex == 0) {
+      return const DashboardScreen();
+    } else if (_navigationIndex == 1) {
+      return const HistoryScreen();
+    } else if (_navigationIndex == 2) {
+      return const AccountScreen();
+    }
+
+    return const DashboardScreen();
   }
 }
