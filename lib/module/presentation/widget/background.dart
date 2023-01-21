@@ -18,20 +18,20 @@ class Background extends StatelessWidget {
             color: WifiColor.primary,
             shape: BoxShape.circle,
           ),
-          width: MediaQuery.of(context).size.width * 1.5,
-          height: MediaQuery.of(context).size.width * 1.5,
+          width: MediaQuery.of(context).size.width * 1.3,
+          height: MediaQuery.of(context).size.width * 1.3,
         ),
       ),
       Positioned(
         right: -MediaQuery.of(context).size.width * 0.9,
-        top: -MediaQuery.of(context).size.width * 0.2,
+        top: -MediaQuery.of(context).size.width * 0.3,
         child: Container(
           decoration: const BoxDecoration(
             color: WifiColor.secondary,
             shape: BoxShape.circle,
           ),
-          width: MediaQuery.of(context).size.width * 1.5,
-          height: MediaQuery.of(context).size.width * 1.5,
+          width: MediaQuery.of(context).size.width * 1.3,
+          height: MediaQuery.of(context).size.width * 1.3,
         ),
       ),
       Padding(

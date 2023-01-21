@@ -68,19 +68,9 @@ class _AccountScreenState extends State<AccountScreen> {
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 14),
         child: Row(children: [
-          _buildCard(
-            title: "Poin Anda",
-            value: "1400",
-            onTap: () => widget.changeIndex(1),
-          ),
-          const SizedBox(
-            width: 14,
-          ),
-          _buildCard(
-            title: "Paket Internet",
-            value: "Paket 100rb",
-            onTap: () => {},
-          ),
+          _buildCardPoin(),
+          const SizedBox(width: 14),
+          _buildCardPaket(),
         ]),
       ),
       const SizedBox(height: 16),
@@ -159,20 +149,15 @@ class _AccountScreenState extends State<AccountScreen> {
     );
   }
 
-  Widget _buildCard({
-    required String title,
-    required String value,
-    required Function() onTap,
-  }) {
+  Widget _buildCardPoin() {
     return Expanded(
       child: GestureDetector(
-        onTap: onTap,
+        onTap: () => widget.changeIndex(1),
         child: Container(
           decoration: const BoxDecoration(
             color: AppColors.white,
-            borderRadius: BorderRadius.all(Radius.circular(4)),
+            borderRadius: BorderRadius.all(Radius.circular(6)),
           ),
-          padding: const EdgeInsets.symmetric(horizontal: 20),
           height: 70,
           child: Row(children: [
             Expanded(
@@ -180,19 +165,71 @@ class _AccountScreenState extends State<AccountScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(title, style: TextStyles.r11Black3),
+                  Row(children: [
+                    const SizedBox(width: 10),
+                    const Icon(
+                      Icons.stars,
+                      color: AppColors.magenta1,
+                      size: 18,
+                    ),
+                    const SizedBox(width: 4),
+                    Text("Poin Anda", style: TextStyles.r11Black3),
+                  ]),
                   const SizedBox(height: 4),
-                  Text(
-                    value,
-                    style: TextStyles.r13.copyWith(fontWeight: FontWeight.w600),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 14),
+                    child: Text("1400", style: TextStyles.s13),
                   ),
                 ],
               ),
             ),
-            const Icon(
-              Icons.chevron_right,
-              color: AppColors.magenta1,
+            const Icon(Icons.chevron_right, color: AppColors.magenta1),
+            const SizedBox(width: 6),
+          ]),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCardPaket() {
+    return Expanded(
+      child: GestureDetector(
+        onTap: () {},
+        child: Container(
+          decoration: const BoxDecoration(
+            color: AppColors.white,
+            borderRadius: BorderRadius.all(Radius.circular(6)),
+          ),
+          height: 70,
+          child: Row(children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Row(children: [
+                    const SizedBox(width: 10),
+                    const Icon(
+                      Icons.wifi,
+                      color: AppColors.magenta1,
+                      size: 18,
+                    ),
+                    const SizedBox(width: 4),
+                    Text("Paket Internet", style: TextStyles.r11Black3),
+                  ]),
+                  const SizedBox(height: 4),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 14),
+                    child: Text(
+                      "Paket 100rb",
+                      style: TextStyles.s13,
+                    ),
+                  ),
+                ],
+              ),
             ),
+            const Icon(Icons.chevron_right, color: AppColors.magenta1),
+            const SizedBox(width: 6),
           ]),
         ),
       ),

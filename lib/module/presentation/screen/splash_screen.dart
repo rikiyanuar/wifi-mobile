@@ -31,34 +31,22 @@ class _SplashScreenState extends State<SplashScreen> {
     return ChangeNotifierProvider(
       create: (context) => _viewModel!,
       child: Scaffold(
-        backgroundColor: WifiColor.primary,
-        body: Stack(children: [
-          Positioned(
-            left: MediaQuery.of(context).size.width * 0.5,
-            top: -MediaQuery.of(context).size.width * 0.2,
-            child: RotationTransition(
-              turns: const AlwaysStoppedAnimation(45 / 360),
-              child: Container(
-                decoration: const BoxDecoration(
-                  color: WifiColor.secondary,
-                  borderRadius: BorderRadius.all(Radius.circular(20)),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black12,
-                      blurRadius: 20,
-                      spreadRadius: 30,
-                    )
-                  ],
-                ),
-                width: MediaQuery.of(context).size.width * 1.5,
-                height: MediaQuery.of(context).size.width * 1.5,
-              ),
+        body: Container(
+          decoration: const BoxDecoration(
+            gradient: RadialGradient(
+              colors: [Color(0xff3C8CE7), Color(0xff00EAFF)],
+              center: Alignment.topLeft,
+              radius: 1.6,
             ),
           ),
-          Center(
-            child: Text("WIFI APP", style: TextStyles.b16White),
-          )
-        ]),
+          width: double.infinity,
+          height: double.infinity,
+          alignment: Alignment.center,
+          child: Text(
+            "WIFI App",
+            style: TextStyles.h20.copyWith(color: WifiColor.accent2),
+          ),
+        ),
       ),
     );
   }
