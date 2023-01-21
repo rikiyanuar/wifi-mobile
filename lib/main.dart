@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_core/utils/ssl_pinning/ssl_pinning.dart';
 import 'package:flutter_libraries/libraries.dart';
 import 'package:wifiapp/module/domain/entity/pelanggan_entity.dart';
+import 'package:wifiapp/module/presentation/screen/account/edit_password_screen.dart';
 import 'package:wifiapp/module/presentation/screen/splash_screen.dart';
 
 import 'generated/l10n.dart';
@@ -22,6 +23,7 @@ class AppModule {
     AppRoutes.editProfileScreen: (context) => EditProfileScreen(
         pelangganEntity:
             ModalRoute.of(context)!.settings.arguments as PelangganEntity),
+    AppRoutes.editPasswordnScreen: (context) => const EditPasswordScreen(),
   };
 
   injector() {

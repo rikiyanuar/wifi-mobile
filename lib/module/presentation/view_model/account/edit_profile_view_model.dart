@@ -76,8 +76,10 @@ class EditProfileViewModel extends JurnalAppChangeNotifier {
           "nik": nikControl.value,
         },
       );
+      await _accountHelper.updateName(name: namaControl.value);
       await _accountHelper.updateEmail(
-          email: emailControl.value, password: passwordControl.value);
+          email: nikControl.value + AppWriteConstant.emailSuffix,
+          password: passwordControl.value);
 
       return GeneralSuccessState();
     } on AppwriteException catch (e) {

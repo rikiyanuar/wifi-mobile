@@ -7,6 +7,7 @@ class AppRoutes {
   static const String loginScreen = "/loginScreen";
   static const String layoutScreen = "/layoutScreen";
   static const String editProfileScreen = "/editProfileScreen";
+  static const String editPasswordnScreen = "/editPasswordnScreen";
 }
 
 abstract class AppRouter {
@@ -14,6 +15,7 @@ abstract class AppRouter {
   Future<void> goToLogin();
   Future<void> goToLayout(int? defaultIndexMenu);
   Future<void> goToEditProfile(PelangganEntity pelangganEntity);
+  Future<void> goToEditPassword();
 }
 
 class AppRouterImpl extends AppRouter {
@@ -38,4 +40,8 @@ class AppRouterImpl extends AppRouter {
         AppRoutes.editProfileScreen,
         arguments: pelangganEntity,
       );
+
+  @override
+  Future<void> goToEditPassword() =>
+      AppNavigator.pushNamed(AppRoutes.editPasswordnScreen);
 }

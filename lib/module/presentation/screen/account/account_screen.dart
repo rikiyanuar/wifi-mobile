@@ -111,11 +111,15 @@ class _AccountScreenState extends State<AccountScreen> {
         ),
       ),
       const SizedBox(height: 6),
-      _buildListTile("Ubah Profil", onTap: () {
-        GetIt.I.get<AppRouter>().goToEditProfile(_viewModel!.dataAccount);
+      _buildListTile("Ubah Profil", onTap: () async {
+        await GetIt.I.get<AppRouter>().goToEditProfile(_viewModel!.dataAccount);
+        _getAccount();
       }),
       const Divider(height: 1),
-      _buildListTile("Ubah Password"),
+      _buildListTile(
+        "Ubah Password",
+        onTap: () => GetIt.I.get<AppRouter>().goToEditPassword(),
+      ),
       const SizedBox(height: 16),
       Text(
         "LAINNYA",

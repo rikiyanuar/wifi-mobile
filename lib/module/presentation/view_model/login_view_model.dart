@@ -42,7 +42,7 @@ class LoginViewModel extends JurnalAppChangeNotifier {
       final response = await _accountHelper.createEmailSession(
         email:
             "1234567812345679@wifi.com", //emailControl.value+AppWriteConstant.emailSuffix,
-        password: "Qwerty123", // passwordControl.value,
+        password: "12345678", // passwordControl.value,
       );
 
       return GeneralSuccessState(object: response);
