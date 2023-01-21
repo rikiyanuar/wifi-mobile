@@ -1,4 +1,5 @@
 class PelangganEntity {
+  final String? id;
   final String nama;
   final String nohp;
   final String email;
@@ -7,6 +8,7 @@ class PelangganEntity {
   final List<dynamic> paket;
 
   PelangganEntity({
+    this.id,
     required this.nama,
     required this.nohp,
     required this.email,
@@ -17,6 +19,7 @@ class PelangganEntity {
 
   factory PelangganEntity.fromJson(Map<String, dynamic> json) =>
       PelangganEntity(
+        id: json["id"],
         nama: json["nama"],
         nohp: json["nohp"],
         email: json["email"],
@@ -26,6 +29,7 @@ class PelangganEntity {
       );
 
   Map<String, dynamic> toJson() => {
+        "id": id,
         "nama": nama,
         "nohp": nohp,
         "email": email,

@@ -1,7 +1,6 @@
 import 'package:appwrite/appwrite.dart';
 import 'package:flutter_core/core.dart';
 import 'package:flutter_libraries/libraries.dart';
-import 'package:wifiapp/module/external/external.dart';
 
 import '../../external/appwrite/appwrite_helper.dart';
 import '../../external/constant/appwrite_error_type.dart';
@@ -32,6 +31,10 @@ class LoginViewModel extends JurnalAppChangeNotifier {
 
   final _accountHelper = AppWriteHelper.accountHelper();
 
+  LoginViewModel() {
+    form.reset();
+  }
+
   Future<GeneralState> login() async {
     try {
       _isLoading(true);
@@ -53,8 +56,7 @@ class LoginViewModel extends JurnalAppChangeNotifier {
     } catch (e) {
       return GeneralErrorState(message: e.toString());
     } finally {
-      emailControl.updateValue("");
-      passwordControl.updateValue("");
+      form.reset();
       _isLoading(false);
     }
   }

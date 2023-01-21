@@ -57,11 +57,14 @@ class AccountViewModel extends JurnalAppChangeNotifier {
   Future<GeneralState> _getDataAccount(String userId) async {
     try {
       _isLoading(true);
-      final response = await AppWriteHelper.documentHelper(
+      final response = await AppWriteHelper.listDocuments(
         AppWriteConstant.pelangganId,
         queries: [Query.equal("userID", userId)],
       );
-      dataAccount = PelangganEntity.fromJson(response.documents.first.data);
+      dataAccount = PelangganEntity.fromJson({
+        ...response.documents.first.data,
+        "id": response.documents.first.$id,
+      });
 
       return GeneralSuccessState();
     } on AppwriteException catch (e) {

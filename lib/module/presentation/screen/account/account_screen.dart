@@ -111,7 +111,9 @@ class _AccountScreenState extends State<AccountScreen> {
         ),
       ),
       const SizedBox(height: 6),
-      _buildListTile("Ubah Profil"),
+      _buildListTile("Ubah Profil", onTap: () {
+        GetIt.I.get<AppRouter>().goToEditProfile(_viewModel!.dataAccount);
+      }),
       const Divider(height: 1),
       _buildListTile("Ubah Password"),
       const SizedBox(height: 16),

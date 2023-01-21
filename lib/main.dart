@@ -2,10 +2,12 @@ import 'package:flutter_core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_core/utils/ssl_pinning/ssl_pinning.dart';
 import 'package:flutter_libraries/libraries.dart';
+import 'package:wifiapp/module/domain/entity/pelanggan_entity.dart';
 import 'package:wifiapp/module/presentation/screen/splash_screen.dart';
 
 import 'generated/l10n.dart';
 import 'module/external/external.dart';
+import 'module/presentation/screen/account/edit_profile_screen.dart';
 import 'module/presentation/screen/layout_screen.dart';
 import 'module/presentation/screen/login_screen.dart';
 
@@ -17,6 +19,9 @@ class AppModule {
     AppRoutes.splashScreen: (context) => const SplashScreen(),
     AppRoutes.loginScreen: (context) => const LoginScreen(),
     AppRoutes.layoutScreen: (context) => const LayoutScreen(),
+    AppRoutes.editProfileScreen: (context) => EditProfileScreen(
+        pelangganEntity:
+            ModalRoute.of(context)!.settings.arguments as PelangganEntity),
   };
 
   injector() {

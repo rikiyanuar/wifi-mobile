@@ -105,6 +105,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   _login() async {
+    _viewModel!.form.markAllAsTouched();
     if (_viewModel!.form.invalid) {
       StandardToast.error(context, "Lengkapi form login");
 
