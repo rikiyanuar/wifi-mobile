@@ -31,7 +31,7 @@ class EditProfileViewModel extends JurnalAppChangeNotifier {
     validators: [Validators.required],
   );
   static FormControl nohpControl = FormControl(
-    validators: [Validators.required, Validators.number],
+    validators: [Validators.required],
   );
   static FormControl emailControl = FormControl(
     validators: [Validators.required, Validators.email],
@@ -70,7 +70,7 @@ class EditProfileViewModel extends JurnalAppChangeNotifier {
         documentId: pelangganEntity.id!,
         data: {
           "nama": namaControl.value,
-          "nohp": nohpControl.value,
+          "nohp": nohpControl.value, // TODO: convert phone to +62
           "email": emailControl.value,
           "alamat": alamatControl.value,
           "nik": nikControl.value,
@@ -80,9 +80,12 @@ class EditProfileViewModel extends JurnalAppChangeNotifier {
       await _accountHelper.updateEmail(
           email: nikControl.value + AppWriteConstant.emailSuffix,
           password: passwordControl.value);
+      await _accountHelper.updatePhone(
+          phone: nohpControl.value, password: passwordControl.value);
 
       return GeneralSuccessState();
     } on AppwriteException catch (e) {
+      print(e.message);
       String message = e.message!;
       if (e.type == AppWriteErrorType.userInvalidCredentials) {
         message = "Password yang Anda masukkan salah";

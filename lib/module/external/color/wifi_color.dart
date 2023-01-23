@@ -6,4 +6,6 @@ class WifiColor {
   static const Color tertiary = Color(0xff9c27b0);
   static const Color accent1 = Color(0xffFF4C54);
   static const Color accent2 = Color(0xff283578);
+  // ff03a9f4
+  // ff3f51b5
 }

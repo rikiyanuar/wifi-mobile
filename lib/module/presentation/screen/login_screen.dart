@@ -47,13 +47,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     decoration: const BoxDecoration(
                       color: AppColors.white,
                       borderRadius: BorderRadius.all(Radius.circular(12)),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black12,
-                          blurRadius: 6,
-                          spreadRadius: 6,
-                        ),
-                      ],
                     ),
                     child: ReactiveForm(
                       formGroup: _viewModel!.form,

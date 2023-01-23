@@ -56,8 +56,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
         indicatorColor: AppColors.magenta1,
         indicatorWeight: 3,
         labelColor: AppColors.black3,
-        labelStyle: TextStyles.m14,
-        unselectedLabelStyle: TextStyles.r14,
+        labelStyle: TextStyles.m13,
+        unselectedLabelStyle: TextStyles.r13,
         unselectedLabelColor: AppColors.black3,
         tabs: const [
           Tab(text: "Tagihan"),
@@ -75,16 +75,32 @@ class _HistoryScreenState extends State<HistoryScreen> {
         removeTop: true,
         child: ListView.separated(
           itemBuilder: (context, index) {
-            return const ListTile(
+            final data = _viewModel!.listTagihan[index];
+
+            return ListTile(
               dense: true,
-              title: Text("Text"),
+              title: Row(children: [
+                Expanded(
+                  child: Text(data.bulan, style: TextStyles.r13),
+                ),
+                Text(
+                  JurnalAppFormats.idrMoneyFormat(
+                      value: data.nominal, pattern: "Rp"),
+                  style: TextStyles.s13,
+                ),
+              ]),
+              trailing: const Icon(
+                Icons.chevron_right,
+                color: AppColors.magenta1,
+              ),
+              onTap: () {},
             );
           },
           separatorBuilder: (context, index) => const Padding(
             padding: EdgeInsets.symmetric(horizontal: 14),
             child: Divider(height: 1),
           ),
-          itemCount: 10,
+          itemCount: _viewModel!.listTagihan.length,
         ),
       ),
     );

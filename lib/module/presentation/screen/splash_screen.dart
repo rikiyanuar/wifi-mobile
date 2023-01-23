@@ -34,7 +34,7 @@ class _SplashScreenState extends State<SplashScreen> {
         body: Container(
           decoration: const BoxDecoration(
             gradient: RadialGradient(
-              colors: [Color(0xff3C8CE7), Color(0xff00EAFF)],
+              colors: [WifiColor.primary, WifiColor.secondary],
               center: Alignment.topLeft,
               radius: 1.6,
             ),

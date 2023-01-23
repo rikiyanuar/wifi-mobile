@@ -73,10 +73,10 @@ class _AccountScreenState extends State<AccountScreen> {
           _buildCardPaket(),
         ]),
       ),
-      const SizedBox(height: 16),
+      const SizedBox(height: 18),
       Expanded(
         child: ClipRRect(
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(8)),
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(10)),
           child: Container(
             width: 1.sw,
             color: AppColors.white,
@@ -178,7 +178,7 @@ class _AccountScreenState extends State<AccountScreen> {
                   const SizedBox(height: 4),
                   Padding(
                     padding: const EdgeInsets.only(left: 14),
-                    child: Text("1400", style: TextStyles.s13),
+                    child: Text("140.000", style: TextStyles.s13),
                   ),
                 ],
               ),
