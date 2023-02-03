@@ -9,6 +9,7 @@ import 'package:sliding_sheet/sliding_sheet.dart';
 import 'package:wifiapp/module/domain/entity/banner_entity.dart';
 import 'package:wifiapp/module/presentation/widget/background.dart';
 
+import '../../../data/appwrite/appwrite_helper.dart';
 import '../../../domain/entity/produk_entity.dart';
 import '../../view_model/dashboard/dashboard_view_model.dart';
 import '../../view_model/general_state.dart';
@@ -25,7 +26,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   void initState() {
-    _viewModel = DashboardViewModel();
+    _viewModel = DashboardViewModel(
+      appWriteHelper: GetIt.I.get<AppWriteHelper>(),
+    );
     _getAccount();
     _getBanner();
     _getProduk();
@@ -79,8 +82,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 elevation: 0,
               ),
               Expanded(
-                child: SingleChildScrollView(
-                  child: _buildBody(),
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.all(Radius.circular(24)),
+                  child: SingleChildScrollView(
+                    child: _buildBody(),
+                  ),
                 ),
               ),
             ]),

@@ -2,11 +2,12 @@ import 'package:appwrite/appwrite.dart';
 import 'package:flutter_core/core.dart';
 import 'package:flutter_libraries/libraries.dart';
 
-import '../../external/appwrite/appwrite_helper.dart';
+import '../../data/appwrite/appwrite_helper.dart';
 import '../../external/constant/appwrite_error_type.dart';
 import 'general_state.dart';
 
 class LoginViewModel extends JurnalAppChangeNotifier {
+  final AppWriteHelper appWriteHelper;
   bool isLoading = false;
   static const String emailKey = "emailKey";
   static const String passwordKey = "passwordKey";
@@ -29,17 +30,19 @@ class LoginViewModel extends JurnalAppChangeNotifier {
     ValidationMessage.number: "Harus berisi angka",
   };
 
-  final _accountHelper = AppWriteHelper.accountHelper();
-
-  LoginViewModel() {
+  LoginViewModel({
+    required this.appWriteHelper,
+  }) {
     form.reset();
   }
 
   Future<GeneralState> login() async {
+    final accountHelper = appWriteHelper.accountHelper();
+
     try {
       _isLoading(true);
       // TODO: change to get from form
-      final response = await _accountHelper.createEmailSession(
+      final response = await accountHelper.createEmailSession(
         email:
             "1234567812345679@wifi.com", //emailControl.value+AppWriteConstant.emailSuffix,
         password: "12345678", // passwordControl.value,

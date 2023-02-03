@@ -4,6 +4,7 @@ import 'package:flutter_libraries/libraries.dart';
 import 'package:flutter_libraries/provider.dart';
 import 'package:wifiapp/module/presentation/widget/custom_app_bar.dart';
 
+import '../../../data/appwrite/appwrite_helper.dart';
 import '../../../domain/entity/pelanggan_entity.dart';
 import '../../view_model/account/edit_profile_view_model.dart';
 import '../../view_model/general_state.dart';
@@ -24,6 +25,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   void initState() {
     _viewModel = EditProfileViewModel(
       pelangganEntity: widget.pelangganEntity,
+      appWriteHelper: GetIt.I.get<AppWriteHelper>(),
     );
     super.initState();
   }

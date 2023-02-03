@@ -2,11 +2,12 @@ import 'package:appwrite/appwrite.dart';
 import 'package:flutter_core/core.dart';
 import 'package:flutter_libraries/libraries.dart';
 
-import '../../../external/appwrite/appwrite_helper.dart';
+import '../../../data/appwrite/appwrite_helper.dart';
 import '../../../external/constant/appwrite_error_type.dart';
 import '../general_state.dart';
 
 class EditPasswordViewModel extends JurnalAppChangeNotifier {
+  final AppWriteHelper appWriteHelper;
   bool isLoading = false;
   static const String oldKey = "oldKey";
   static const String newKey = "newKey";
@@ -48,17 +49,17 @@ class EditPasswordViewModel extends JurnalAppChangeNotifier {
     "mustMatch": "Password baru tidak sama",
   };
 
-  final _accountHelper = AppWriteHelper.accountHelper();
-
-  EditPasswordViewModel() {
+  EditPasswordViewModel({required this.appWriteHelper}) {
     form.reset();
   }
 
   Future<GeneralState> save() async {
+    final accountHelper = appWriteHelper.accountHelper();
+
     try {
       _isLoading(true);
 
-      await _accountHelper.updatePassword(
+      await accountHelper.updatePassword(
         password: newControl.value,
         oldPassword: oldControl.value,
       );

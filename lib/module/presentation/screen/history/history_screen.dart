@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_core/core.dart';
+import 'package:flutter_libraries/libraries.dart';
 import 'package:flutter_libraries/provider.dart';
+import 'package:wifiapp/module/external/external.dart';
 import 'package:wifiapp/module/presentation/widget/custom_app_bar.dart';
 
 import '../../view_model/history/history_view_model.dart';
@@ -73,36 +75,66 @@ class _HistoryScreenState extends State<HistoryScreen> {
       child: MediaQuery.removePadding(
         context: context,
         removeTop: true,
-        child: ListView.separated(
-          itemBuilder: (context, index) {
-            final data = _viewModel!.listTagihan[index];
-
-            return ListTile(
-              dense: true,
-              title: Row(children: [
-                Expanded(
-                  child: Text(data.bulan, style: TextStyles.r13),
-                ),
-                Text(
-                  JurnalAppFormats.idrMoneyFormat(
-                      value: data.nominal, pattern: "Rp"),
-                  style: TextStyles.s13,
-                ),
-              ]),
-              trailing: const Icon(
-                Icons.chevron_right,
-                color: AppColors.magenta1,
-              ),
-              onTap: () {},
-            );
-          },
-          separatorBuilder: (context, index) => const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 14),
-            child: Divider(height: 1),
-          ),
-          itemCount: _viewModel!.listTagihan.length,
-        ),
+        child: TabBarView(children: [
+          _buildListTagihan(),
+          _buildListPoin(),
+          _buildListPoin(),
+        ]),
       ),
+    );
+  }
+
+  ListView _buildListTagihan() {
+    return ListView.separated(
+      itemBuilder: (context, index) {
+        final data = _viewModel!.listTagihan[index];
+
+        return ListTile(
+          dense: true,
+          title: Row(children: [
+            Expanded(
+              child: Text(data.bulan, style: TextStyles.r13),
+            ),
+            Text(
+              JurnalAppFormats.idrMoneyFormat(
+                  value: data.nominal, pattern: "Rp"),
+              style: TextStyles.s13,
+            ),
+          ]),
+          trailing: const Icon(
+            Icons.chevron_right,
+            color: AppColors.magenta1,
+          ),
+          onTap: () => GetIt.I.get<AppRouter>().goToDetailTagihan(data),
+        );
+      },
+      separatorBuilder: (context, index) => const Padding(
+        padding: EdgeInsets.symmetric(horizontal: 14),
+        child: Divider(height: 1),
+      ),
+      itemCount: _viewModel!.listTagihan.length,
+    );
+  }
+
+  ListView _buildListPoin() {
+    return ListView.separated(
+      itemBuilder: (context, index) {
+        final data = _viewModel!.listPoin[index];
+
+        return ListTile(
+          dense: true,
+          title: Text(data.tanggal, style: TextStyles.r13),
+          trailing: Text(
+            JurnalAppFormats.idrMoneyFormat(value: data.nominal),
+            style: TextStyles.s13,
+          ),
+        );
+      },
+      separatorBuilder: (context, index) => const Padding(
+        padding: EdgeInsets.symmetric(horizontal: 14),
+        child: Divider(height: 1),
+      ),
+      itemCount: _viewModel!.listPoin.length,
     );
   }
 }

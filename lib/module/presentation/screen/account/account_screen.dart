@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_core/core.dart';
 import 'package:flutter_libraries/libraries.dart';
 import 'package:flutter_libraries/provider.dart';
+import 'package:wifiapp/module/data/appwrite/appwrite_helper.dart';
 
 import '../../../external/router/app_router.dart';
 import '../../view_model/account/account_view_model.dart';
@@ -22,7 +23,9 @@ class _AccountScreenState extends State<AccountScreen> {
 
   @override
   void initState() {
-    _viewModel = AccountViewModel();
+    _viewModel = AccountViewModel(
+      appWriteHelper: GetIt.I.get<AppWriteHelper>(),
+    );
     _getAccount();
     super.initState();
   }

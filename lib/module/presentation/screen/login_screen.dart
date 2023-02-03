@@ -5,6 +5,7 @@ import 'package:flutter_libraries/provider.dart';
 import 'package:wifiapp/module/external/router/app_router.dart';
 import 'package:wifiapp/module/presentation/view_model/general_state.dart';
 
+import '../../data/appwrite/appwrite_helper.dart';
 import '../view_model/login_view_model.dart';
 import '../widget/background.dart';
 
@@ -20,7 +21,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   void initState() {
-    _viewModel = LoginViewModel();
+    _viewModel = LoginViewModel(
+      appWriteHelper: GetIt.I.get<AppWriteHelper>(),
+    );
     super.initState();
   }
 

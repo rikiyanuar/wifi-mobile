@@ -1,5 +1,6 @@
 import 'package:flutter_core/core.dart';
 import 'package:wifiapp/module/domain/entity/pelanggan_entity.dart';
+import 'package:wifiapp/module/domain/entity/tagihan_entity.dart';
 
 class AppRoutes {
   static const String root = MainRoutes.penjualanModule;
@@ -7,7 +8,8 @@ class AppRoutes {
   static const String loginScreen = "/loginScreen";
   static const String layoutScreen = "/layoutScreen";
   static const String editProfileScreen = "/editProfileScreen";
-  static const String editPasswordnScreen = "/editPasswordnScreen";
+  static const String editPasswordScreen = "/editPasswordScreen";
+  static const String detailTagihanScreen = "/detailTagihanScreen";
 }
 
 abstract class AppRouter {
@@ -16,6 +18,7 @@ abstract class AppRouter {
   Future<void> goToLayout(int? defaultIndexMenu);
   Future<void> goToEditProfile(PelangganEntity pelangganEntity);
   Future<void> goToEditPassword();
+  Future<void> goToDetailTagihan(TagihanEntity tagihanEntity);
 }
 
 class AppRouterImpl extends AppRouter {
@@ -43,5 +46,10 @@ class AppRouterImpl extends AppRouter {
 
   @override
   Future<void> goToEditPassword() =>
-      AppNavigator.pushNamed(AppRoutes.editPasswordnScreen);
+      AppNavigator.pushNamed(AppRoutes.editPasswordScreen);
+
+  @override
+  Future<void> goToDetailTagihan(TagihanEntity tagihanEntity) =>
+      AppNavigator.pushNamed(AppRoutes.detailTagihanScreen,
+          arguments: tagihanEntity);
 }

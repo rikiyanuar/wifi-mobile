@@ -1,29 +1,47 @@
 import 'package:appwrite/appwrite.dart';
 import 'package:appwrite/models.dart' show DocumentList, Document;
 
-import '../constant/appwrite_constant.dart';
+import '../../external/constant/appwrite_constant.dart';
 
-class AppWriteHelper {
-  static Account accountHelper() {
+abstract class AppWriteHelper {
+  Account accountHelper();
+  Databases databaseHelper();
+  Storage storageHelper();
+  Future<DocumentList> listDocuments(
+    collectionId, {
+    List<String>? queries,
+  });
+  Future<Document> updateDocument({
+    required String collectionId,
+    required String documentId,
+    dynamic data,
+  });
+}
+
+class AppWriteHelperImpl extends AppWriteHelper {
+  @override
+  Account accountHelper() {
     final account = Account(_client());
 
     return account;
   }
 
-  static Databases databaseHelper() {
+  @override
+  Databases databaseHelper() {
     final database = Databases(_client());
 
     return database;
   }
 
-  static Storage storageHelper() {
+  @override
+  Storage storageHelper() {
     final storage = Storage(_client());
 
     return storage;
   }
 
-  static Future<DocumentList> listDocuments(collectionId,
-      {List<String>? queries}) {
+  @override
+  Future<DocumentList> listDocuments(collectionId, {List<String>? queries}) {
     final document = databaseHelper().listDocuments(
       databaseId: AppWriteConstant.databaseId,
       collectionId: collectionId,
@@ -33,7 +51,8 @@ class AppWriteHelper {
     return document;
   }
 
-  static Future<Document> updateDocument({
+  @override
+  Future<Document> updateDocument({
     required String collectionId,
     required String documentId,
     dynamic data,

@@ -2,24 +2,25 @@ import 'package:appwrite/appwrite.dart';
 import 'package:appwrite/models.dart';
 import 'package:flutter_core/core.dart';
 
-import '../../../external/appwrite/appwrite_helper.dart';
+import '../../../data/appwrite/appwrite_helper.dart';
 import '../../../external/external.dart';
 import '../general_state.dart';
 
 class DashboardViewModel extends JurnalAppChangeNotifier {
+  final AppWriteHelper appWriteHelper;
   bool isLoading = false;
   List<Document> listBanner = [];
   List<Document> listProduk = [];
   String nama = "-";
   String nohp = "";
 
-  final _accountHelper = AppWriteHelper.accountHelper();
+  DashboardViewModel({required this.appWriteHelper});
 
   Future<GeneralState> getBanner() async {
     try {
       _isLoading(true);
       final response =
-          await AppWriteHelper.listDocuments(AppWriteConstant.bannerId);
+          await appWriteHelper.listDocuments(AppWriteConstant.bannerId);
       listBanner = response.documents;
 
       return GeneralSuccessState();
@@ -36,7 +37,7 @@ class DashboardViewModel extends JurnalAppChangeNotifier {
     try {
       _isLoading(true);
       final response =
-          await AppWriteHelper.listDocuments(AppWriteConstant.produkId);
+          await appWriteHelper.listDocuments(AppWriteConstant.produkId);
       listProduk = response.documents;
 
       return GeneralSuccessState();
@@ -50,9 +51,11 @@ class DashboardViewModel extends JurnalAppChangeNotifier {
   }
 
   Future<GeneralState> getAccount() async {
+    final accountHelper = appWriteHelper.accountHelper();
+
     try {
       _isLoading(true);
-      final response = await _accountHelper.get();
+      final response = await accountHelper.get();
       nama = response.name;
       nohp = response.phone;
 

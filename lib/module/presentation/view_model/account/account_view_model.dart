@@ -3,10 +3,11 @@ import 'package:flutter_core/core.dart';
 import 'package:wifiapp/module/domain/entity/pelanggan_entity.dart';
 import 'package:wifiapp/module/external/external.dart';
 
-import '../../../external/appwrite/appwrite_helper.dart';
+import '../../../data/appwrite/appwrite_helper.dart';
 import '../general_state.dart';
 
 class AccountViewModel extends JurnalAppChangeNotifier {
+  final AppWriteHelper appWriteHelper;
   PelangganEntity dataAccount = PelangganEntity.fromJson({
     "nama": "",
     "nohp": "",
@@ -21,12 +22,14 @@ class AccountViewModel extends JurnalAppChangeNotifier {
   bool isLoading = false;
   String nama = "";
 
-  final _accountHelper = AppWriteHelper.accountHelper();
+  AccountViewModel({required this.appWriteHelper});
 
   Future<GeneralState> getAccount() async {
+    final accountHelper = appWriteHelper.accountHelper();
+
     try {
       _isLoading(true);
-      final response = await _accountHelper.get();
+      final response = await accountHelper.get();
       nama = response.name;
 
       return _getDataAccount(response.$id);
@@ -40,9 +43,11 @@ class AccountViewModel extends JurnalAppChangeNotifier {
   }
 
   Future<GeneralState> logout() async {
+    final accountHelper = appWriteHelper.accountHelper();
+
     try {
       _isLoading(true);
-      await _accountHelper.deleteSessions();
+      await accountHelper.deleteSessions();
 
       return GeneralSuccessState();
     } on AppwriteException catch (e) {
@@ -57,7 +62,7 @@ class AccountViewModel extends JurnalAppChangeNotifier {
   Future<GeneralState> _getDataAccount(String userId) async {
     try {
       _isLoading(true);
-      final response = await AppWriteHelper.listDocuments(
+      final response = await appWriteHelper.listDocuments(
         AppWriteConstant.pelangganId,
         queries: [Query.equal("userID", userId)],
       );

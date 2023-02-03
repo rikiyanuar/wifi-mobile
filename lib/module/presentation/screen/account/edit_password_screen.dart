@@ -3,6 +3,7 @@ import 'package:flutter_core/core.dart';
 import 'package:flutter_libraries/libraries.dart';
 import 'package:flutter_libraries/provider.dart';
 
+import '../../../data/appwrite/appwrite_helper.dart';
 import '../../view_model/account/edit_password_view_model.dart';
 import '../../view_model/general_state.dart';
 import '../../widget/custom_app_bar.dart';
@@ -19,7 +20,9 @@ class _EditPasswordScreenState extends State<EditPasswordScreen> {
 
   @override
   void initState() {
-    _viewModel = EditPasswordViewModel();
+    _viewModel = EditPasswordViewModel(
+      appWriteHelper: GetIt.I.get<AppWriteHelper>(),
+    );
     super.initState();
   }
 

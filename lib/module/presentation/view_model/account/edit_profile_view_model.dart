@@ -3,12 +3,13 @@ import 'package:flutter_core/core.dart';
 import 'package:flutter_libraries/libraries.dart';
 
 import '../../../domain/entity/pelanggan_entity.dart';
-import '../../../external/appwrite/appwrite_helper.dart';
+import '../../../data/appwrite/appwrite_helper.dart';
 import '../../../external/constant/appwrite_error_type.dart';
 import '../../../external/external.dart';
 import '../general_state.dart';
 
 class EditProfileViewModel extends JurnalAppChangeNotifier {
+  final AppWriteHelper appWriteHelper;
   final PelangganEntity pelangganEntity;
   bool isLoading = false;
   static const String namaKey = "namaKey";
@@ -51,9 +52,8 @@ class EditProfileViewModel extends JurnalAppChangeNotifier {
     ValidationMessage.email: "Format email salah",
   };
 
-  final _accountHelper = AppWriteHelper.accountHelper();
-
-  EditProfileViewModel({required this.pelangganEntity}) {
+  EditProfileViewModel(
+      {required this.pelangganEntity, required this.appWriteHelper}) {
     form.reset();
     namaControl.updateValue(pelangganEntity.nama);
     nohpControl.updateValue(pelangganEntity.nohp);
@@ -63,9 +63,11 @@ class EditProfileViewModel extends JurnalAppChangeNotifier {
   }
 
   Future<GeneralState> save() async {
+    final accountHelper = appWriteHelper.accountHelper();
+
     try {
       _isLoading(true);
-      await AppWriteHelper.updateDocument(
+      await appWriteHelper.updateDocument(
         collectionId: AppWriteConstant.pelangganId,
         documentId: pelangganEntity.id!,
         data: {
@@ -76,16 +78,15 @@ class EditProfileViewModel extends JurnalAppChangeNotifier {
           "nik": nikControl.value,
         },
       );
-      await _accountHelper.updateName(name: namaControl.value);
-      await _accountHelper.updateEmail(
+      await accountHelper.updateName(name: namaControl.value);
+      await accountHelper.updateEmail(
           email: nikControl.value + AppWriteConstant.emailSuffix,
           password: passwordControl.value);
-      await _accountHelper.updatePhone(
+      await accountHelper.updatePhone(
           phone: nohpControl.value, password: passwordControl.value);
 
       return GeneralSuccessState();
     } on AppwriteException catch (e) {
-      print(e.message);
       String message = e.message!;
       if (e.type == AppWriteErrorType.userInvalidCredentials) {
         message = "Password yang Anda masukkan salah";

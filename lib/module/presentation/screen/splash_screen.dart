@@ -4,6 +4,7 @@ import 'package:flutter_libraries/libraries.dart';
 import 'package:flutter_libraries/provider.dart';
 import 'package:wifiapp/module/external/external.dart';
 
+import '../../data/appwrite/appwrite_helper.dart';
 import '../view_model/general_state.dart';
 import '../view_model/splash_view_model.dart';
 
@@ -19,7 +20,9 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   void initState() {
-    _viewModel = SplashViewModel();
+    _viewModel = SplashViewModel(
+      appWriteHelper: GetIt.I.get<AppWriteHelper>(),
+    );
 
     _checkSession();
 

@@ -3,10 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_core/utils/ssl_pinning/ssl_pinning.dart';
 import 'package:flutter_libraries/libraries.dart';
 import 'package:wifiapp/module/domain/entity/pelanggan_entity.dart';
+import 'package:wifiapp/module/domain/entity/tagihan_entity.dart';
 import 'package:wifiapp/module/presentation/screen/account/edit_password_screen.dart';
+import 'package:wifiapp/module/presentation/screen/history/tagihan_screen.dart';
 import 'package:wifiapp/module/presentation/screen/splash_screen.dart';
 
 import 'generated/l10n.dart';
+import 'module/data/appwrite/appwrite_helper.dart';
+import 'module/data/local/cart_helper.dart';
 import 'module/external/external.dart';
 import 'module/presentation/screen/account/edit_profile_screen.dart';
 import 'module/presentation/screen/layout_screen.dart';
@@ -23,12 +27,16 @@ class AppModule {
     AppRoutes.editProfileScreen: (context) => EditProfileScreen(
         pelangganEntity:
             ModalRoute.of(context)!.settings.arguments as PelangganEntity),
-    AppRoutes.editPasswordnScreen: (context) => const EditPasswordScreen(),
+    AppRoutes.editPasswordScreen: (context) => const EditPasswordScreen(),
+    AppRoutes.detailTagihanScreen: (context) => TagihanScreen(
+        tagihanEntity:
+            ModalRoute.of(context)!.settings.arguments as TagihanEntity),
   };
 
   injector() {
     _utilsBindings();
     _routerBindings();
+    _helperBindings();
   }
 
   _utilsBindings() {
@@ -60,6 +68,15 @@ class AppModule {
   _routerBindings() {
     instance.registerLazySingleton<AppRouter>(
       () => AppRouterImpl(),
+    );
+  }
+
+  _helperBindings() {
+    instance.registerLazySingleton<CartHelper>(
+      () => CartHelperImpl(),
+    );
+    instance.registerLazySingleton<AppWriteHelper>(
+      () => AppWriteHelperImpl(),
     );
   }
 }
