@@ -5,14 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_core/core.dart';
 import 'package:flutter_libraries/libraries.dart';
 import 'package:flutter_libraries/provider.dart';
-import 'package:sliding_sheet/sliding_sheet.dart';
 import 'package:wifiapp/module/domain/entity/banner_entity.dart';
 import 'package:wifiapp/module/presentation/widget/background.dart';
 
 import '../../../data/appwrite/appwrite_helper.dart';
+import '../../../data/local/cart_helper.dart';
 import '../../../domain/entity/produk_entity.dart';
 import '../../view_model/dashboard/dashboard_view_model.dart';
 import '../../view_model/general_state.dart';
+import 'detail_produk_fragment.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -28,10 +29,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
   void initState() {
     _viewModel = DashboardViewModel(
       appWriteHelper: GetIt.I.get<AppWriteHelper>(),
+      cartHelper: GetIt.I.get<CartHelper>(),
     );
     _getAccount();
     _getBanner();
     _getProduk();
+    _getCart();
     super.initState();
   }
 
@@ -45,36 +48,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             padding: EdgeInsets.zero,
             elevation: 0,
             useClipper: true,
-            floatingWidget: Container(
-              margin: EdgeInsets.only(
-                  bottom: MediaQuery.of(context).viewInsets.bottom),
-              color: AppColors.purple1,
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-              child: Row(children: [
-                Text(
-                  "12",
-                  style: TextStyles.b16White,
-                ),
-                Text(" item", style: TextStyles.r14White),
-                Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 16),
-                  height: 20,
-                  width: 1.5,
-                  color: Colors.white,
-                ),
-                Expanded(
-                  child: Text(
-                    JurnalAppFormats.idrMoneyFormat(
-                      value: 120000,
-                    ),
-                    style: TextStyles.b16White,
-                  ),
-                ),
-                const SizedBox(width: 4),
-                const Icon(Ionicons.chevron_forward_circle,
-                    color: AppColors.white)
-              ]),
-            ),
+            floatingWidget: viewModel.cartEntity == null ? null : _buildCart(),
             widget: Column(children: [
               AppBar(
                 backgroundColor: Colors.transparent,
@@ -93,6 +67,42 @@ class _DashboardScreenState extends State<DashboardScreen> {
           );
         },
       ),
+    );
+  }
+
+  Widget _buildCart() {
+    if (_viewModel!.cartEntity!.totalItem == 0) {
+      return Container();
+    }
+    final cart = _viewModel!.cartEntity!;
+
+    return Container(
+      margin: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+      color: AppColors.purple1,
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+      child: Row(children: [
+        Text(
+          "${cart.totalItem}",
+          style: TextStyles.b16White,
+        ),
+        Text(" item", style: TextStyles.r14White),
+        Container(
+          margin: const EdgeInsets.symmetric(horizontal: 16),
+          height: 20,
+          width: 1.5,
+          color: Colors.white,
+        ),
+        Expanded(
+          child: Text(
+            JurnalAppFormats.idrMoneyFormat(
+              value: cart.subTotal!,
+            ),
+            style: TextStyles.b16White,
+          ),
+        ),
+        const SizedBox(width: 4),
+        const Icon(Ionicons.chevron_forward_circle, color: AppColors.white)
+      ]),
     );
   }
 
@@ -176,7 +186,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       mainAxisSpacing: 8,
       childAspectRatio: 0.8,
       children: _viewModel!.listProduk.map((e) {
-        final data = ProdukEntity.fromJson(e.data);
+        final data = ProdukEntity.fromJson({...e.data, "id": e.$id});
 
         return _buildCardProduk(data);
       }).toList(),
@@ -189,7 +199,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
-      onTap: () => _showDetailProduk(data, bytes),
+      onTap: () => DetailProdukFragment(
+        mounted: mounted,
+        context: context,
+        bytes: bytes,
+        produkEntity: data,
+      ),
       child: Container(
         decoration: BoxDecoration(
           color: AppColors.white,
@@ -351,89 +366,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  // ignore: long-method
-  _showDetailProduk(ProdukEntity produkEntity, Uint8List bytes) {
-    return showSlidingBottomSheet(context, builder: (context) {
-      return SlidingSheetDialog(
-        cornerRadius: 12,
-        cornerRadiusOnFullscreen: 0,
-        avoidStatusBar: true,
-        duration: const Duration(milliseconds: 500),
-        snapSpec: const SnapSpec(
-          snap: true,
-          snappings: [0.7, 1.0],
-          positioning: SnapPositioning.relativeToAvailableSpace,
-        ),
-        headerBuilder: (_, __) {
-          return Material(
-            child: Container(
-              height: kToolbarHeight,
-              color: AppColors.white,
-              child: Row(children: [
-                IconButton(
-                  onPressed: () => AppNavigator.pop(),
-                  icon: const Icon(Icons.close),
-                ),
-                Text(
-                  "Detail Produk",
-                  style: Theme.of(context).textTheme.headline6,
-                ),
-              ]),
-            ),
-          );
-        },
-        footerBuilder: (_, __) {
-          return Material(
-            color: AppColors.white,
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: GeneralButton(
-                text: "Tambahkan ke Keranjang",
-                onTap: () {},
-              ),
-            ),
-          );
-        },
-        builder: (_, __) {
-          return Material(
-            color: AppColors.white,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    alignment: Alignment.center,
-                    child: Image.memory(
-                      bytes,
-                      fit: BoxFit.contain,
-                      height: MediaQuery.of(context).size.width,
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  Text(produkEntity.nama, style: TextStyles.s16),
-                  const SizedBox(height: 6),
-                  Text(
-                    JurnalAppFormats.idrMoneyFormat(
-                        value: produkEntity.harga, pattern: "Rp"),
-                    style: TextStyles.r14,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    child: Text(
-                      produkEntity.deskripsi,
-                      textAlign: TextAlign.justify,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
-      );
-    });
-  }
-
   _getBanner() async {
     final state = await _viewModel!.getBanner();
 
@@ -454,6 +386,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   _getAccount() async {
     final state = await _viewModel!.getAccount();
+
+    if (!mounted) return;
+    if (state is GeneralErrorState) {
+      StandardToast.showClientErrorToast(context, message: state.message);
+    }
+  }
+
+  _getCart() async {
+    final state = await _viewModel!.getCart();
 
     if (!mounted) return;
     if (state is GeneralErrorState) {

@@ -35,17 +35,37 @@ class CartHelperImpl extends CartHelper {
 
       return await _save(data);
     } else {
-      final data = CartEntity(
-        totalItem: 1,
-        idProduk: [...res.idProduk!, item.idProduk!],
-        namaProduk: [...res.namaProduk!, item.namaProduk!],
-        qtyProduk: [...res.qtyProduk!, item.qtyProduk!],
-        hargaProduk: [...res.hargaProduk!, item.hargaProduk!],
-        totalQty: res.totalQty! + item.qtyProduk!,
-        subTotal: res.subTotal! + item.hargaProduk!,
-      );
+      if (res.idProduk!.contains(item.idProduk)) {
+        List<int> qtyList = res.qtyProduk!;
+        final index = res.idProduk!.indexOf(item.idProduk!);
+        final newQty = qtyList[index] + item.qtyProduk!;
+        qtyList.removeAt(index);
+        qtyList.insert(index, newQty);
 
-      return await _save(data);
+        final data = CartEntity(
+          totalItem: res.totalItem!,
+          idProduk: res.idProduk!,
+          namaProduk: res.namaProduk!,
+          qtyProduk: qtyList,
+          hargaProduk: res.hargaProduk!,
+          totalQty: qtyList.reduce((v, e) => v + e),
+          subTotal: res.subTotal! + item.hargaProduk!,
+        );
+
+        return await _save(data);
+      } else {
+        final data = CartEntity(
+          totalItem: res.totalItem! + 1,
+          idProduk: [...res.idProduk!, item.idProduk!],
+          namaProduk: [...res.namaProduk!, item.namaProduk!],
+          qtyProduk: [...res.qtyProduk!, item.qtyProduk!],
+          hargaProduk: [...res.hargaProduk!, item.hargaProduk!],
+          totalQty: res.totalQty! + item.qtyProduk!,
+          subTotal: res.subTotal! + item.hargaProduk!,
+        );
+
+        return await _save(data);
+      }
     }
   }
 

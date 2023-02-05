@@ -4,6 +4,7 @@ class ProdukEntity {
   final String satuan;
   final String foto;
   final String deskripsi;
+  final String? id;
 
   ProdukEntity({
     required this.nama,
@@ -11,6 +12,7 @@ class ProdukEntity {
     required this.satuan,
     required this.foto,
     required this.deskripsi,
+    this.id,
   });
 
   factory ProdukEntity.fromJson(Map<String, dynamic> json) => ProdukEntity(
@@ -19,6 +21,7 @@ class ProdukEntity {
         satuan: json["satuan"],
         foto: json["foto"],
         deskripsi: json["deskripsi"],
+        id: json["id"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -27,5 +30,6 @@ class ProdukEntity {
         "satuan": satuan,
         "foto": foto,
         "deskripsi": deskripsi,
+        "id": id,
       };
 }
