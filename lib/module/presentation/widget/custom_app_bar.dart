@@ -11,6 +11,7 @@ class CustomAppBar extends StatelessWidget {
   final Widget? action;
   final double paddingTop;
   final bool isLoading;
+  final Widget? floatingWidget;
 
   const CustomAppBar({
     Key? key,
@@ -20,12 +21,14 @@ class CustomAppBar extends StatelessWidget {
     this.action,
     this.paddingTop = 4,
     this.isLoading = false,
+    this.floatingWidget,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Background(
       padding: EdgeInsets.zero,
+      floatingWidget: floatingWidget,
       widget: LoadingIndicator(
         isLoading: isLoading,
         child: Column(children: [

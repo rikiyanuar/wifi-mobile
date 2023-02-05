@@ -10,6 +10,7 @@ class AppRoutes {
   static const String editProfileScreen = "/editProfileScreen";
   static const String editPasswordScreen = "/editPasswordScreen";
   static const String detailTagihanScreen = "/detailTagihanScreen";
+  static const String cartScreen = "/cartScreen";
 }
 
 abstract class AppRouter {
@@ -19,6 +20,7 @@ abstract class AppRouter {
   Future<void> goToEditProfile(PelangganEntity pelangganEntity);
   Future<void> goToEditPassword();
   Future<void> goToDetailTagihan(TagihanEntity tagihanEntity);
+  Future<void> goToCart();
 }
 
 class AppRouterImpl extends AppRouter {
@@ -52,4 +54,7 @@ class AppRouterImpl extends AppRouter {
   Future<void> goToDetailTagihan(TagihanEntity tagihanEntity) =>
       AppNavigator.pushNamed(AppRoutes.detailTagihanScreen,
           arguments: tagihanEntity);
+
+  @override
+  Future<void> goToCart() => AppNavigator.pushNamed(AppRoutes.cartScreen);
 }

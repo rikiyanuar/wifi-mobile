@@ -23,6 +23,7 @@ dependencies:
   appwrite: 8.1.0
   carousel_slider: ^4.2.1
   sliding_sheet: ^0.5.2
+  flutter_svg: 1.1.0
 
 dependency_overrides:
   firebase_core_platform_interface: 4.5.1
@@ -34,6 +35,8 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/images/
   fonts:
     - family: Montserrat
       fonts:

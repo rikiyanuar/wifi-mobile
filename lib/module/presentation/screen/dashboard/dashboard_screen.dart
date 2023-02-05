@@ -6,6 +6,7 @@ import 'package:flutter_core/core.dart';
 import 'package:flutter_libraries/libraries.dart';
 import 'package:flutter_libraries/provider.dart';
 import 'package:wifiapp/module/domain/entity/banner_entity.dart';
+import 'package:wifiapp/module/external/external.dart';
 import 'package:wifiapp/module/presentation/widget/background.dart';
 
 import '../../../data/appwrite/appwrite_helper.dart';
@@ -75,34 +76,40 @@ class _DashboardScreenState extends State<DashboardScreen> {
       return Container();
     }
     final cart = _viewModel!.cartEntity!;
+    final totalItem = cart.qtyProduk!.reduce((v, e) => v + e);
 
-    return Container(
-      margin: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-      color: AppColors.purple1,
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-      child: Row(children: [
-        Text(
-          "${cart.totalItem}",
-          style: TextStyles.b16White,
-        ),
-        Text(" item", style: TextStyles.r14White),
-        Container(
-          margin: const EdgeInsets.symmetric(horizontal: 16),
-          height: 20,
-          width: 1.5,
-          color: Colors.white,
-        ),
-        Expanded(
-          child: Text(
-            JurnalAppFormats.idrMoneyFormat(
-              value: cart.subTotal!,
-            ),
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      onTap: () => GetIt.I.get<AppRouter>().goToCart(),
+      child: Container(
+        margin:
+            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+        color: AppColors.purple1,
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+        child: Row(children: [
+          Text(
+            "$totalItem",
             style: TextStyles.b16White,
           ),
-        ),
-        const SizedBox(width: 4),
-        const Icon(Ionicons.chevron_forward_circle, color: AppColors.white)
-      ]),
+          Text(" item", style: TextStyles.r14White),
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 16),
+            height: 20,
+            width: 1.5,
+            color: Colors.white,
+          ),
+          Expanded(
+            child: Text(
+              JurnalAppFormats.idrMoneyFormat(
+                value: cart.subTotal!,
+              ),
+              style: TextStyles.b16White,
+            ),
+          ),
+          const SizedBox(width: 4),
+          const Icon(Ionicons.chevron_forward_circle, color: AppColors.white)
+        ]),
+      ),
     );
   }
 
@@ -199,12 +206,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
-      onTap: () => DetailProdukFragment(
-        mounted: mounted,
-        context: context,
-        bytes: bytes,
-        produkEntity: data,
-      ),
+      onTap: () async {
+        await DetailProdukFragment(
+          mounted: mounted,
+          context: context,
+          bytes: bytes,
+          produkEntity: data,
+        ).showBottomsheet();
+        _getCart();
+      },
       child: Container(
         decoration: BoxDecoration(
           color: AppColors.white,

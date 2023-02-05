@@ -83,8 +83,6 @@ class DashboardViewModel extends JurnalAppChangeNotifier {
       cartEntity = response;
 
       return GeneralSuccessState();
-    } on AppwriteException catch (e) {
-      return GeneralErrorState(message: e.type);
     } catch (e) {
       return GeneralErrorState(message: e.toString());
     } finally {

@@ -20,11 +20,9 @@ class DetailProdukFragment {
     required this.produkEntity,
     required this.bytes,
     required this.mounted,
-  }) {
-    _showBottomsheet();
-  }
+  });
 
-  _showBottomsheet() {
+  showBottomsheet() {
     return showSlidingBottomSheet(context, builder: (context) {
       return SlidingSheetDialog(
         cornerRadius: 12,

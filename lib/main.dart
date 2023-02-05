@@ -5,6 +5,7 @@ import 'package:flutter_libraries/libraries.dart';
 import 'package:wifiapp/module/domain/entity/pelanggan_entity.dart';
 import 'package:wifiapp/module/domain/entity/tagihan_entity.dart';
 import 'package:wifiapp/module/presentation/screen/account/edit_password_screen.dart';
+import 'package:wifiapp/module/presentation/screen/dashboard/cart_screen.dart';
 import 'package:wifiapp/module/presentation/screen/history/tagihan_screen.dart';
 import 'package:wifiapp/module/presentation/screen/splash_screen.dart';
 
@@ -31,6 +32,7 @@ class AppModule {
     AppRoutes.detailTagihanScreen: (context) => TagihanScreen(
         tagihanEntity:
             ModalRoute.of(context)!.settings.arguments as TagihanEntity),
+    AppRoutes.cartScreen: (context) => const CartScreen(),
   };
 
   injector() {
