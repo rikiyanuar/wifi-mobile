@@ -9,6 +9,7 @@ import '../../external/external.dart';
 abstract class CartHelper {
   Future<CartEntity> getAll();
   Future<bool> insertItem(CartItem item);
+  Future<bool> removeCart();
 }
 
 class CartHelperImpl extends CartHelper {
@@ -69,6 +70,13 @@ class CartHelperImpl extends CartHelper {
     }
   }
 
+  @override
+  Future<bool> removeCart() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+
+    return sharedPreferences.remove(PrefsConstant.orderPrefs);
+  }
+
   Future<bool> _save(CartEntity cart) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     try {
@@ -76,9 +84,8 @@ class CartHelperImpl extends CartHelper {
         json.encode(cart),
         keyString: PrefsConstant.orderKey,
       );
-      sharedPreferences.setString(PrefsConstant.orderPrefs, base64);
 
-      return true;
+      return sharedPreferences.setString(PrefsConstant.orderPrefs, base64);
     } catch (e) {
       return false;
     }

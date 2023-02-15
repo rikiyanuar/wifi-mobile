@@ -3,8 +3,11 @@ import 'package:flutter_core/core.dart';
 import 'package:flutter_libraries/libraries.dart';
 import 'package:flutter_libraries/provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:wifiapp/module/data/appwrite/appwrite_helper.dart';
 
 import '../../../data/local/cart_helper.dart';
+import '../../../data/local/session_helper.dart';
+import '../../../external/external.dart';
 import '../../view_model/dashboard/cart_view_model.dart';
 import '../../view_model/general_state.dart';
 import '../../widget/background.dart';
@@ -23,8 +26,11 @@ class _CartScreenState extends State<CartScreen> {
   void initState() {
     _viewModel = CartViewModel(
       cartHelper: GetIt.I.get<CartHelper>(),
+      sessionHelper: GetIt.I.get<SessionHelper>(),
+      appWriteHelper: GetIt.I.get<AppWriteHelper>(),
     );
     _getCartData();
+    _getPelanggan();
     super.initState();
   }
 
@@ -34,28 +40,30 @@ class _CartScreenState extends State<CartScreen> {
       create: (context) => _viewModel!,
       child: Consumer<CartViewModel>(
         builder: (context, viewModel, builder) {
-          return Background(
-            padding: EdgeInsets.zero,
-            floatingWidget: Container(
-              color: AppColors.white,
-              padding: const EdgeInsets.all(16),
-              child: GeneralButton(
-                text: "Beli",
-                onTap: () => {},
-              ),
-            ),
-            widget: Column(children: [
-              AppBar(
-                backgroundColor: Colors.transparent,
-                title: Text(
-                  "Keranjang",
-                  style: TextStyles.m18.copyWith(color: AppColors.white),
+          return LoadingIndicator(
+            isLoading: viewModel.isLoading,
+            child: Background(
+              padding: EdgeInsets.zero,
+              floatingWidget: Container(
+                color: AppColors.white,
+                padding: const EdgeInsets.all(16),
+                child: GeneralButton(
+                  text: "Beli",
+                  onTap: () => _beli(),
+                  isLoading: viewModel.isLoading,
                 ),
-                elevation: 0,
               ),
-              Expanded(
-                child: Stack(
-                  children: [
+              widget: Column(children: [
+                AppBar(
+                  backgroundColor: Colors.transparent,
+                  title: Text(
+                    "Keranjang",
+                    style: TextStyles.m18.copyWith(color: AppColors.white),
+                  ),
+                  elevation: 0,
+                ),
+                Expanded(
+                  child: Stack(children: [
                     SvgPicture.asset(
                       "assets/images/bc_convetti.svg",
                       width: 1.sw,
@@ -74,10 +82,10 @@ class _CartScreenState extends State<CartScreen> {
                         ),
                       ),
                     ]),
-                  ],
-                ),
-              )
-            ]),
+                  ]),
+                )
+              ]),
+            ),
           );
         },
       ),
@@ -112,7 +120,7 @@ class _CartScreenState extends State<CartScreen> {
                 ),
                 const SizedBox(width: 4),
                 Text(
-                  "140.000",
+                  JurnalAppFormats.idrMoneyFormat(value: _viewModel!.poin),
                   style: TextStyles.s14.copyWith(color: AppColors.white),
                 ),
               ])
@@ -253,7 +261,16 @@ class _CartScreenState extends State<CartScreen> {
       return const SizedBox.shrink();
     }
 
-    final half = _viewModel!.cartEntity!.subTotal! / 2;
+    int used = 0;
+    int cash = _viewModel!.cartEntity!.subTotal!;
+    if (_viewModel!.poin > _viewModel!.cartEntity!.subTotal! / 2) {
+      used = _viewModel!.cartEntity!.subTotal! ~/ 2;
+      cash = used;
+    } else {
+      used = _viewModel!.poin;
+      cash = _viewModel!.cartEntity!.subTotal! - used;
+    }
+    final percent = (used / _viewModel!.poin) * 100;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -271,11 +288,11 @@ class _CartScreenState extends State<CartScreen> {
         ]),
         const SizedBox(height: 8),
         Row(children: [
-          Text("Total poin terpakai (50%)", style: TextStyles.r12),
+          Text("Total poin terpakai ($percent%)", style: TextStyles.r12),
           const Spacer(),
           Text(
             JurnalAppFormats.idrMoneyFormat(
-              value: half.toInt(),
+              value: used,
               pattern: "-Rp",
             ),
             style: TextStyles.m12,
@@ -287,7 +304,7 @@ class _CartScreenState extends State<CartScreen> {
           const Spacer(),
           Text(
             JurnalAppFormats.idrMoneyFormat(
-              value: half.toInt(),
+              value: cash,
               pattern: "Rp",
             ),
             style: TextStyles.s14,
@@ -303,6 +320,40 @@ class _CartScreenState extends State<CartScreen> {
     if (!mounted) return;
     if (state is GeneralErrorState) {
       StandardToast.showClientErrorToast(context, message: state.message);
+    }
+  }
+
+  _getPelanggan() async {
+    final state = await _viewModel!.getPelanggan();
+
+    if (!mounted) return;
+    if (state is GeneralErrorState) {
+      StandardToast.showClientErrorToast(context, message: state.message);
+    }
+  }
+
+  _beli() async {
+    int used = 0;
+    int cash = _viewModel!.cartEntity!.subTotal!;
+    if (_viewModel!.poin > _viewModel!.cartEntity!.subTotal! / 2) {
+      used = _viewModel!.cartEntity!.subTotal! ~/ 2;
+      cash = used;
+    } else {
+      used = _viewModel!.poin;
+      cash = _viewModel!.cartEntity!.subTotal! - used;
+    }
+
+    final state = await _viewModel!.beli(used, cash);
+
+    if (!mounted) return;
+    if (state is GeneralErrorState) {
+      StandardToast.showClientErrorToast(context, message: state.message);
+    } else if (state is GeneralSuccessState) {
+      StandardToast.success(
+        context,
+        "Pesanan berhasil dikirim",
+        onClose: () => GetIt.I.get<AppRouter>().goToLayout(0),
+      );
     }
   }
 }
