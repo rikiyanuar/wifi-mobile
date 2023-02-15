@@ -1,13 +1,16 @@
 import 'package:appwrite/appwrite.dart';
 import 'package:flutter_core/core.dart';
 import 'package:flutter_libraries/libraries.dart';
+import 'package:wifiapp/module/data/local/session_helper.dart';
 
 import '../../data/appwrite/appwrite_helper.dart';
 import '../../external/constant/appwrite_error_type.dart';
+import '../../external/external.dart';
 import 'general_state.dart';
 
 class LoginViewModel extends JurnalAppChangeNotifier {
   final AppWriteHelper appWriteHelper;
+  final SessionHelper sessionHelper;
   bool isLoading = false;
   static const String emailKey = "emailKey";
   static const String passwordKey = "passwordKey";
@@ -32,6 +35,7 @@ class LoginViewModel extends JurnalAppChangeNotifier {
 
   LoginViewModel({
     required this.appWriteHelper,
+    required this.sessionHelper,
   }) {
     form.reset();
   }
@@ -48,7 +52,7 @@ class LoginViewModel extends JurnalAppChangeNotifier {
         password: "12345678", // passwordControl.value,
       );
 
-      return GeneralSuccessState(object: response);
+      return _getPelanggan(response.userId);
     } on AppwriteException catch (e) {
       String message = e.message!;
       if (e.type == AppWriteErrorType.userBlocked) {
@@ -61,6 +65,40 @@ class LoginViewModel extends JurnalAppChangeNotifier {
     } finally {
       form.reset();
       _isLoading(false);
+    }
+  }
+
+  Future<GeneralState> _getPelanggan(String userId) async {
+    try {
+      _isLoading(true);
+      final response = await appWriteHelper.listDocuments(
+        AppWriteConstant.pelangganId,
+        queries: [Query.equal("userID", userId)],
+      );
+
+      return _saveSession(userId, response.documents.first.$id);
+    } on AppwriteException catch (e) {
+      return GeneralErrorState(message: e.type);
+    } catch (e) {
+      return GeneralErrorState(message: e.toString());
+    } finally {
+      _isLoading(false);
+    }
+  }
+
+  Future<GeneralState> _saveSession(userId, pelangganId) async {
+    try {
+      if (await sessionHelper.saveUserId(userId)) {
+        if (await sessionHelper.savePelangganId(pelangganId)) {
+          return GeneralSuccessState();
+        } else {
+          return GeneralErrorState();
+        }
+      } else {
+        return GeneralErrorState();
+      }
+    } catch (e) {
+      return GeneralErrorState();
     }
   }
 

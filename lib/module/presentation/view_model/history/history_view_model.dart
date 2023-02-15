@@ -1,104 +1,74 @@
+import 'package:appwrite/appwrite.dart';
+import 'package:appwrite/models.dart';
 import 'package:flutter_core/core.dart';
-import 'package:wifiapp/module/domain/entity/poin_entity.dart';
+import 'package:wifiapp/module/data/local/session_helper.dart';
 
-import '../../../domain/entity/tagihan_entity.dart';
+import '../../../data/appwrite/appwrite_helper.dart';
+import '../../../external/external.dart';
+import '../general_state.dart';
 
 class HistoryViewModel extends JurnalAppChangeNotifier {
-  List<TagihanEntity> listTagihan = [
-    TagihanEntity(
-      bulan: "Juli",
-      tahun: 2022,
-      isLunas: true,
-      tglLunas: "",
-      nominal: 100000,
-    ),
-    TagihanEntity(
-      bulan: "Agustus",
-      tahun: 2022,
-      isLunas: true,
-      tglLunas: "",
-      nominal: 100000,
-    ),
-    TagihanEntity(
-      bulan: "September",
-      tahun: 2022,
-      isLunas: true,
-      tglLunas: "",
-      nominal: 100000,
-    ),
-    TagihanEntity(
-      bulan: "Oktober",
-      tahun: 2022,
-      isLunas: true,
-      tglLunas: "",
-      nominal: 100000,
-    ),
-    TagihanEntity(
-      bulan: "November",
-      tahun: 2022,
-      isLunas: true,
-      tglLunas: "",
-      nominal: 100000,
-    ),
-    TagihanEntity(
-      bulan: "Desember",
-      tahun: 2022,
-      isLunas: true,
-      tglLunas: "",
-      nominal: 100000,
-    ),
-    TagihanEntity(
-      bulan: "Januari",
-      tahun: 2023,
-      isLunas: true,
-      tglLunas: "",
-      nominal: 100000,
-    ),
-    TagihanEntity(
-      bulan: "Februari",
-      tahun: 2023,
-      isLunas: true,
-      tglLunas: "",
-      nominal: 100000,
-    ),
-    TagihanEntity(
-      bulan: "Maret",
-      tahun: 2023,
-      isLunas: true,
-      tglLunas: "",
-      nominal: 100000,
-    ),
-    TagihanEntity(
-      bulan: "April",
-      tahun: 2023,
-      isLunas: true,
-      tglLunas: "",
-      nominal: 100000,
-    ),
-    TagihanEntity(
-      bulan: "Mei",
-      tahun: 2023,
-      isLunas: true,
-      tglLunas: "",
-      nominal: 100000,
-    ),
-    TagihanEntity(
-      bulan: "Juni",
-      tahun: 2023,
-      isLunas: true,
-      tglLunas: "",
-      nominal: 100000,
-    ),
-  ];
+  final AppWriteHelper appWriteHelper;
+  final SessionHelper sessionHelper;
+  bool isLoading = false;
+  List<Document> listTagihan = [];
+  List<Document> listPoin = [];
 
-  List<PoinEntity> listPoin = [
-    PoinEntity(tanggal: "12 Desember 2022 - 20:12", nominal: 30000),
-    PoinEntity(tanggal: "14 Desember 2022 - 20:12", nominal: 30000),
-    PoinEntity(tanggal: "16 Desember 2022 - 20:12", nominal: 30000),
-    PoinEntity(tanggal: "17 Desember 2022 - 20:12", nominal: 30000),
-    PoinEntity(tanggal: "18 Desember 2022 - 20:12", nominal: 30000),
-    PoinEntity(tanggal: "19 Desember 2022 - 20:12", nominal: 30000),
-    PoinEntity(tanggal: "01 Januari 2023 - 20:12", nominal: 30000),
-    PoinEntity(tanggal: "12 Januar 2023 - 20:12", nominal: 30000),
-  ];
+  HistoryViewModel({
+    required this.appWriteHelper,
+    required this.sessionHelper,
+  });
+
+  Future<GeneralState> getPoin() async {
+    try {
+      _isLoading(true);
+      final pelangganId = await sessionHelper.getPelangganId();
+      final response = await appWriteHelper.listDocuments(
+        AppWriteConstant.poinId,
+        queries: [
+          Query.equal("pelangganId", pelangganId),
+          Query.limit(20),
+          Query.orderDesc("\$id"),
+        ],
+      );
+      listPoin = response.documents;
+
+      return GeneralSuccessState();
+    } on AppwriteException catch (e) {
+      return GeneralErrorState(message: e.type);
+    } catch (e) {
+      return GeneralErrorState(message: e.toString());
+    } finally {
+      _isLoading(false);
+    }
+  }
+
+  Future<GeneralState> getTagihan() async {
+    try {
+      _isLoading(true);
+      final pelangganId = await sessionHelper.getPelangganId();
+      final response = await appWriteHelper.listDocuments(
+        AppWriteConstant.tagihanId,
+        queries: [
+          Query.equal("pelangganId", pelangganId),
+          Query.limit(20),
+          Query.orderDesc("\$id"),
+        ],
+      );
+      listTagihan = response.documents;
+
+      return GeneralSuccessState();
+    } on AppwriteException catch (e) {
+      return GeneralErrorState(message: e.type);
+    } catch (e) {
+      return GeneralErrorState(message: e.toString());
+    } finally {
+      _isLoading(false);
+    }
+  }
+
+  _isLoading(bool value) {
+    isLoading = value;
+    notifyListeners();
+  }
 }

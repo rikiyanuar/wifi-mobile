@@ -3,6 +3,8 @@ import 'package:appwrite/models.dart';
 import 'package:flutter_core/core.dart';
 import 'package:wifiapp/module/data/local/cart_helper.dart';
 import 'package:wifiapp/module/domain/entity/cart_entity.dart';
+import 'package:wifiapp/module/domain/entity/pelanggan_entity.dart';
+import 'package:wifiapp/module/domain/entity/tagihan_entity.dart';
 
 import '../../../data/appwrite/appwrite_helper.dart';
 import '../../../external/external.dart';
@@ -17,6 +19,8 @@ class DashboardViewModel extends JurnalAppChangeNotifier {
   String nama = "-";
   String nohp = "";
   CartEntity? cartEntity;
+  int poin = 0;
+  TagihanEntity? tagihanEntity;
 
   DashboardViewModel({
     required this.appWriteHelper,
@@ -28,7 +32,9 @@ class DashboardViewModel extends JurnalAppChangeNotifier {
       _isLoading(true);
       final response =
           await appWriteHelper.listDocuments(AppWriteConstant.bannerId);
-      listBanner = response.documents;
+      if (response.total > 0) {
+        listBanner = response.documents;
+      }
 
       return GeneralSuccessState();
     } on AppwriteException catch (e) {
@@ -45,7 +51,9 @@ class DashboardViewModel extends JurnalAppChangeNotifier {
       _isLoading(true);
       final response =
           await appWriteHelper.listDocuments(AppWriteConstant.produkId);
-      listProduk = response.documents;
+      if (response.total > 0) {
+        listProduk = response.documents;
+      }
 
       return GeneralSuccessState();
     } on AppwriteException catch (e) {
@@ -66,7 +74,7 @@ class DashboardViewModel extends JurnalAppChangeNotifier {
       nama = response.name;
       nohp = response.phone;
 
-      return GeneralSuccessState();
+      return _getPelanggan(response.$id);
     } on AppwriteException catch (e) {
       return GeneralErrorState(message: e.type);
     } catch (e) {
@@ -83,6 +91,54 @@ class DashboardViewModel extends JurnalAppChangeNotifier {
       cartEntity = response;
 
       return GeneralSuccessState();
+    } catch (e) {
+      return GeneralErrorState(message: e.toString());
+    } finally {
+      _isLoading(false);
+    }
+  }
+
+  Future<GeneralState> _getPelanggan(String userID) async {
+    try {
+      _isLoading(true);
+      final response = await appWriteHelper.listDocuments(
+        AppWriteConstant.pelangganId,
+        queries: [
+          Query.equal("userID", userID),
+        ],
+      );
+      final data = PelangganEntity.fromJson({
+        ...response.documents.first.data,
+        "id": response.documents.first.$id,
+      });
+      poin = data.poin;
+
+      return _getTagihan(data.id!);
+    } on AppwriteException catch (e) {
+      return GeneralErrorState(message: e.type);
+    } catch (e) {
+      return GeneralErrorState(message: e.toString());
+    } finally {
+      _isLoading(false);
+    }
+  }
+
+  Future<GeneralState> _getTagihan(String pelangganId) async {
+    try {
+      _isLoading(true);
+      final response = await appWriteHelper.listDocuments(
+        AppWriteConstant.tagihanId,
+        queries: [
+          Query.equal("pelangganId", pelangganId),
+        ],
+      );
+      if (response.total > 0) {
+        tagihanEntity = TagihanEntity.fromJson(response.documents.first.data);
+      }
+
+      return GeneralSuccessState();
+    } on AppwriteException catch (e) {
+      return GeneralErrorState(message: e.type);
     } catch (e) {
       return GeneralErrorState(message: e.toString());
     } finally {

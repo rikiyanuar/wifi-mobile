@@ -16,8 +16,9 @@ class AccountViewModel extends JurnalAppChangeNotifier {
     "nik": "",
     "isBlocked": "",
     "blockedReason": "",
-    "paket": [],
+    "paket": ["", "", ""],
     "userID": "",
+    "poin": 0,
   });
   bool isLoading = false;
   String nama = "";

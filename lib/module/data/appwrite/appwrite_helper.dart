@@ -16,6 +16,7 @@ abstract class AppWriteHelper {
     required String documentId,
     dynamic data,
   });
+  Future<Document> getDocuments(collectionId, documentId);
 }
 
 class AppWriteHelperImpl extends AppWriteHelper {
@@ -62,6 +63,17 @@ class AppWriteHelperImpl extends AppWriteHelper {
       documentId: documentId,
       collectionId: collectionId,
       data: data,
+    );
+
+    return document;
+  }
+
+  @override
+  Future<Document> getDocuments(collectionId, documentId) {
+    final document = databaseHelper().getDocument(
+      databaseId: AppWriteConstant.databaseId,
+      collectionId: collectionId,
+      documentId: documentId,
     );
 
     return document;

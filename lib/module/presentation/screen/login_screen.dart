@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_core/core.dart';
 import 'package:flutter_libraries/libraries.dart';
 import 'package:flutter_libraries/provider.dart';
+import 'package:wifiapp/module/data/local/session_helper.dart';
 import 'package:wifiapp/module/external/router/app_router.dart';
 import 'package:wifiapp/module/presentation/view_model/general_state.dart';
 
@@ -23,6 +24,7 @@ class _LoginScreenState extends State<LoginScreen> {
   void initState() {
     _viewModel = LoginViewModel(
       appWriteHelper: GetIt.I.get<AppWriteHelper>(),
+      sessionHelper: GetIt.I.get<SessionHelper>(),
     );
     super.initState();
   }

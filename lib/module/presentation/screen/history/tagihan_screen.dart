@@ -145,7 +145,7 @@ class _TagihanScreenState extends State<TagihanScreen> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Text(
-            "${widget.tagihanEntity.bulan} ${widget.tagihanEntity.tahun}",
+            widget.tagihanEntity.tglTagihan,
             style: TextStyles.s12.copyWith(color: AppColors.black1),
           ),
         ),

@@ -153,6 +153,8 @@ class _AccountScreenState extends State<AccountScreen> {
   }
 
   Widget _buildCardPoin() {
+    final poin = _viewModel!.dataAccount.poin;
+
     return Expanded(
       child: GestureDetector(
         onTap: () => widget.changeIndex(1),
@@ -181,7 +183,10 @@ class _AccountScreenState extends State<AccountScreen> {
                   const SizedBox(height: 4),
                   Padding(
                     padding: const EdgeInsets.only(left: 14),
-                    child: Text("140.000", style: TextStyles.s13),
+                    child: Text(
+                      JurnalAppFormats.idrMoneyFormat(value: poin),
+                      style: TextStyles.s13,
+                    ),
                   ),
                 ],
               ),
@@ -224,7 +229,7 @@ class _AccountScreenState extends State<AccountScreen> {
                   Padding(
                     padding: const EdgeInsets.only(left: 14),
                     child: Text(
-                      "Paket 100rb",
+                      _viewModel!.dataAccount.paket.first,
                       style: TextStyles.s13,
                     ),
                   ),

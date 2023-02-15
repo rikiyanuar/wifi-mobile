@@ -1,31 +1,35 @@
 class TagihanEntity {
-  final String bulan;
-  final int tahun;
   final int nominal;
-  final bool isLunas;
-  final String tglLunas;
+  final String status;
+  final String tglBayar;
+  final String tglTagihan;
+  final String jatuhTempo;
+  final String? id;
 
   TagihanEntity({
-    required this.bulan,
-    required this.tahun,
     required this.nominal,
-    required this.isLunas,
-    required this.tglLunas,
+    required this.status,
+    required this.tglBayar,
+    required this.tglTagihan,
+    required this.jatuhTempo,
+    this.id,
   });
 
   factory TagihanEntity.fromJson(Map<String, dynamic> json) => TagihanEntity(
-        bulan: json["bulan"],
-        tahun: json["tahun"],
         nominal: json["nominal"],
-        isLunas: json["isLunas"],
-        tglLunas: json["tglLunas"],
+        status: json["status"],
+        tglBayar: json["tglBayar"],
+        tglTagihan: json["tglTagihan"],
+        jatuhTempo: json["jatuhTempo"],
+        id: json["id"],
       );
 
   Map<String, dynamic> toJson() => {
-        "bulan": bulan,
-        "tahun": tahun,
         "nominal": nominal,
-        "isLunas": isLunas,
-        "tglLunas": tglLunas,
+        "status": status,
+        "tglBayar": tglBayar,
+        "tglTagihan": tglTagihan,
+        "jatuhTempo": jatuhTempo,
+        "id": id,
       };
 }

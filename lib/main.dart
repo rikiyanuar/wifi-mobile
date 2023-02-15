@@ -12,6 +12,7 @@ import 'package:wifiapp/module/presentation/screen/splash_screen.dart';
 import 'generated/l10n.dart';
 import 'module/data/appwrite/appwrite_helper.dart';
 import 'module/data/local/cart_helper.dart';
+import 'module/data/local/session_helper.dart';
 import 'module/external/external.dart';
 import 'module/presentation/screen/account/edit_profile_screen.dart';
 import 'module/presentation/screen/layout_screen.dart';
@@ -76,6 +77,9 @@ class AppModule {
   _helperBindings() {
     instance.registerLazySingleton<CartHelper>(
       () => CartHelperImpl(),
+    );
+    instance.registerLazySingleton<SessionHelper>(
+      () => SessionHelperImpl(),
     );
     instance.registerLazySingleton<AppWriteHelper>(
       () => AppWriteHelperImpl(),

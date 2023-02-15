@@ -2,10 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_core/core.dart';
 import 'package:flutter_libraries/libraries.dart';
 import 'package:flutter_libraries/provider.dart';
+import 'package:wifiapp/module/data/appwrite/appwrite_helper.dart';
+import 'package:wifiapp/module/domain/entity/poin_entity.dart';
+import 'package:wifiapp/module/domain/entity/tagihan_entity.dart';
 import 'package:wifiapp/module/external/external.dart';
 import 'package:wifiapp/module/presentation/widget/custom_app_bar.dart';
 
+import '../../../data/local/session_helper.dart';
+import '../../view_model/general_state.dart';
 import '../../view_model/history/history_view_model.dart';
+import 'tagihan_fragment.dart';
 
 class HistoryScreen extends StatefulWidget {
   const HistoryScreen({super.key});
@@ -19,7 +25,12 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   @override
   void initState() {
-    _viewModel = HistoryViewModel();
+    _viewModel = HistoryViewModel(
+      appWriteHelper: GetIt.I.get<AppWriteHelper>(),
+      sessionHelper: GetIt.I.get<SessionHelper>(),
+    );
+    _getPoin();
+    _getTagihan();
     super.initState();
   }
 
@@ -84,57 +95,97 @@ class _HistoryScreenState extends State<HistoryScreen> {
     );
   }
 
-  ListView _buildListTagihan() {
-    return ListView.separated(
-      itemBuilder: (context, index) {
-        final data = _viewModel!.listTagihan[index];
+  Widget _buildListTagihan() {
+    return RefreshIndicator(
+      onRefresh: () => _getTagihan(),
+      child: ListView.separated(
+        itemBuilder: (context, index) {
+          final data = TagihanEntity.fromJson({
+            ..._viewModel!.listTagihan[index].data,
+            "id": _viewModel!.listTagihan[index].$id,
+          });
 
-        return ListTile(
-          dense: true,
-          title: Row(children: [
-            Expanded(
-              child: Text(data.bulan, style: TextStyles.r13),
+          return ListTile(
+            dense: true,
+            title: Row(children: [
+              Expanded(
+                child: Text(
+                  JurnalAppFormats.dateFormatter(
+                    pattern: "MMMM yyyy",
+                    text: data.tglTagihan,
+                  ),
+                  style: TextStyles.r13,
+                ),
+              ),
+              Text(
+                JurnalAppFormats.idrMoneyFormat(
+                    value: data.nominal, pattern: "Rp"),
+                style: TextStyles.s13,
+              ),
+            ]),
+            trailing: const Icon(
+              Icons.chevron_right,
+              color: AppColors.magenta1,
             ),
-            Text(
-              JurnalAppFormats.idrMoneyFormat(
-                  value: data.nominal, pattern: "Rp"),
-              style: TextStyles.s13,
-            ),
-          ]),
-          trailing: const Icon(
-            Icons.chevron_right,
-            color: AppColors.magenta1,
-          ),
-          onTap: () => GetIt.I.get<AppRouter>().goToDetailTagihan(data),
-        );
-      },
-      separatorBuilder: (context, index) => const Padding(
-        padding: EdgeInsets.symmetric(horizontal: 14),
-        child: Divider(height: 1),
+            onTap: () => TagihanFragment(context: context, tagihanEntity: data)
+                .showBottomsheet(),
+          );
+        },
+        separatorBuilder: (context, index) => const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 14),
+          child: Divider(height: 1),
+        ),
+        itemCount: _viewModel!.listTagihan.length,
       ),
-      itemCount: _viewModel!.listTagihan.length,
     );
   }
 
-  ListView _buildListPoin() {
-    return ListView.separated(
-      itemBuilder: (context, index) {
-        final data = _viewModel!.listPoin[index];
+  Widget _buildListPoin() {
+    return RefreshIndicator(
+      onRefresh: () => _getPoin(),
+      child: ListView.separated(
+        itemBuilder: (context, index) {
+          final data = PoinEntity.fromJson(_viewModel!.listPoin[index].data);
 
-        return ListTile(
-          dense: true,
-          title: Text(data.tanggal, style: TextStyles.r13),
-          trailing: Text(
-            JurnalAppFormats.idrMoneyFormat(value: data.nominal),
-            style: TextStyles.s13,
-          ),
-        );
-      },
-      separatorBuilder: (context, index) => const Padding(
-        padding: EdgeInsets.symmetric(horizontal: 14),
-        child: Divider(height: 1),
+          return ListTile(
+            dense: true,
+            title: Text(
+              JurnalAppFormats.dateFormatter(
+                pattern: "EEEE, dd MMMM yyyy - HH:mm",
+                date: DateTime.parse(data.tanggal).toLocal(),
+              ),
+              style: TextStyles.r13,
+            ),
+            trailing: Text(
+              JurnalAppFormats.idrMoneyFormat(value: data.nominal),
+              style: TextStyles.s13,
+            ),
+          );
+        },
+        separatorBuilder: (context, index) => const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 14),
+          child: Divider(height: 1),
+        ),
+        itemCount: _viewModel!.listPoin.length,
       ),
-      itemCount: _viewModel!.listPoin.length,
     );
+  }
+
+  _getPoin() async {
+    final state = await _viewModel!.getPoin();
+
+    if (!mounted) return;
+    if (state is GeneralErrorState) {
+      StandardToast.showClientErrorToast(context, message: state.message);
+    }
+  }
+
+  _getTagihan() async {
+    final state = await _viewModel!.getTagihan();
+
+    if (!mounted) return;
+    if (state is GeneralErrorState) {
+      StandardToast.showClientErrorToast(context, message: state.message);
+    }
   }
 }

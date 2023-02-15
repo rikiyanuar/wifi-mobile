@@ -26,6 +26,13 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   DashboardViewModel? _viewModel;
 
+  DateTime get _getNextBill {
+    final bill = DateTime.parse(_viewModel!.tagihanEntity!.tglTagihan);
+    final nextBill = DateTime(bill.year, bill.month + 1, bill.day);
+
+    return nextBill;
+  }
+
   @override
   void initState() {
     _viewModel = DashboardViewModel(
@@ -124,7 +131,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
         borderRadius: const BorderRadius.vertical(top: Radius.circular(10)),
         child: Container(
           width: 1.sw,
-          color: AppColors.white,
+          color: _viewModel!.listBanner.isNotEmpty
+              ? AppColors.white
+              : Colors.transparent,
           padding: const EdgeInsets.only(bottom: 60),
           child: _buildBackdrop(),
         ),
@@ -264,6 +273,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Widget _buildCard() {
+    if (_viewModel!.tagihanEntity == null) {
+      return const SizedBox.shrink();
+    }
+
+    final tagihan = _viewModel!.tagihanEntity == null
+        ? "-"
+        : JurnalAppFormats.idrMoneyFormat(
+            value: _viewModel!.tagihanEntity!.nominal, pattern: "Rp");
+
     return ClipRRect(
       borderRadius: const BorderRadius.all(Radius.circular(8)),
       child: Container(
@@ -284,26 +302,54 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         "Tagihan Anda",
                         style: TextStyles.m11.copyWith(color: AppColors.black3),
                       ),
-                      Text("Rp100.000", style: TextStyles.h24),
+                      Text(tagihan, style: TextStyles.h24),
                     ],
                   ),
                 ),
-                Container(
-                  decoration: const BoxDecoration(
-                    color: AppColors.green1,
-                    borderRadius: BorderRadius.all(Radius.circular(4)),
-                  ),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-                  child: Text(
-                    "Sudah Lunas",
-                    style: TextStyles.m11.copyWith(color: AppColors.white),
+                Visibility(
+                  visible: _viewModel!.tagihanEntity!.status != "belumBayar",
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      color: AppColors.green1,
+                      borderRadius: BorderRadius.all(Radius.circular(4)),
+                    ),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                    child: Text(
+                      "Sudah Lunas",
+                      style: TextStyles.m11.copyWith(color: AppColors.white),
+                    ),
                   ),
                 )
               ]),
             ),
           ),
-          Container(
+          _buildCardFooter()
+        ]),
+      ),
+    );
+  }
+
+  Container _buildCardFooter() {
+    return _viewModel!.tagihanEntity!.status == "belumBayar"
+        ? Container(
+            color: AppColors.neutral20,
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Jatuh Tempo",
+                  style: TextStyles.m12.copyWith(color: AppColors.black1),
+                ),
+                Text(
+                  _viewModel!.tagihanEntity!.jatuhTempo,
+                  style: TextStyles.s12.copyWith(color: AppColors.black1),
+                ),
+              ],
+            ),
+          )
+        : Container(
             color: AppColors.neutral20,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             child: Row(
@@ -314,15 +360,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   style: TextStyles.m12.copyWith(color: AppColors.black1),
                 ),
                 Text(
-                  "01 Februari 2023",
+                  JurnalAppFormats.dateFormatter(
+                    date: _getNextBill,
+                    pattern: "dd MMMM yyyy",
+                  ),
                   style: TextStyles.s12.copyWith(color: AppColors.black1),
                 ),
               ],
             ),
-          )
-        ]),
-      ),
-    );
+          );
   }
 
   Widget _buildHeader() {
@@ -354,7 +400,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           child: Row(children: [
             const SizedBox(width: 12),
             Text(
-              "140.000",
+              JurnalAppFormats.idrMoneyFormat(value: _viewModel!.poin),
               style: TextStyles.s14.copyWith(color: AppColors.black10),
             ),
             const SizedBox(width: 6),

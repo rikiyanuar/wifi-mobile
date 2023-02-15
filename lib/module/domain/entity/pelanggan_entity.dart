@@ -5,6 +5,7 @@ class PelangganEntity {
   final String email;
   final String alamat;
   final String nik;
+  final int poin;
   final List<dynamic> paket;
 
   PelangganEntity({
@@ -14,6 +15,7 @@ class PelangganEntity {
     required this.email,
     required this.alamat,
     required this.nik,
+    required this.poin,
     required this.paket,
   });
 
@@ -25,6 +27,7 @@ class PelangganEntity {
         email: json["email"],
         alamat: json["alamat"],
         nik: json["nik"],
+        poin: json["poin"],
         paket: List<dynamic>.from(json["paket"].map((x) => x)),
       );
 
@@ -35,6 +38,7 @@ class PelangganEntity {
         "email": email,
         "alamat": alamat,
         "nik": nik,
+        "poin": poin,
         "paket": List<dynamic>.from(paket.map((x) => x)),
       };
 }
