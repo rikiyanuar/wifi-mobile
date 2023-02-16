@@ -270,7 +270,6 @@ class _CartScreenState extends State<CartScreen> {
       used = _viewModel!.poin;
       cash = _viewModel!.cartEntity!.subTotal! - used;
     }
-    final percent = (used / _viewModel!.poin) * 100;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -288,7 +287,7 @@ class _CartScreenState extends State<CartScreen> {
         ]),
         const SizedBox(height: 8),
         Row(children: [
-          Text("Total poin terpakai ($percent%)", style: TextStyles.r12),
+          Text("Total poin terpakai (50%)", style: TextStyles.r12),
           const Spacer(),
           Text(
             JurnalAppFormats.idrMoneyFormat(

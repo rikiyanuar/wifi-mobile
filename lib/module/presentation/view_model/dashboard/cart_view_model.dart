@@ -17,6 +17,8 @@ class CartViewModel extends JurnalAppChangeNotifier {
   CartEntity? cartEntity;
   int poin = 0;
 
+  String _nama = "";
+
   CartViewModel({
     required this.cartHelper,
     required this.appWriteHelper,
@@ -47,6 +49,7 @@ class CartViewModel extends JurnalAppChangeNotifier {
       );
       final pelanggan = PelangganEntity.fromJson(response.data);
       poin = pelanggan.poin;
+      _nama = pelanggan.nama;
 
       return GeneralSuccessState();
     } on AppwriteException catch (e) {
@@ -74,6 +77,7 @@ class CartViewModel extends JurnalAppChangeNotifier {
         "tanggal": DateTime.now().toIso8601String(),
         "poinUsed": used,
         "cashUsed": cash,
+        "nama": _nama,
       });
 
       return _removeCart();

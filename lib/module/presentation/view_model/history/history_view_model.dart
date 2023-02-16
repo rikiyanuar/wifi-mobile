@@ -13,6 +13,7 @@ class HistoryViewModel extends JurnalAppChangeNotifier {
   bool isLoading = false;
   List<Document> listTagihan = [];
   List<Document> listPoin = [];
+  List<Document> listTrx = [];
 
   HistoryViewModel({
     required this.appWriteHelper,
@@ -56,6 +57,29 @@ class HistoryViewModel extends JurnalAppChangeNotifier {
         ],
       );
       listTagihan = response.documents;
+
+      return GeneralSuccessState();
+    } on AppwriteException catch (e) {
+      return GeneralErrorState(message: e.type);
+    } catch (e) {
+      return GeneralErrorState(message: e.toString());
+    } finally {
+      _isLoading(false);
+    }
+  }
+
+  Future<GeneralState> getTrx() async {
+    try {
+      _isLoading(true);
+      final pelangganId = await sessionHelper.getPelangganId();
+      final response = await appWriteHelper.listDocuments(
+        AppWriteConstant.transaksiId,
+        queries: [
+          Query.equal("pelangganId", pelangganId),
+          Query.orderDesc("\$id"),
+        ],
+      );
+      listTrx = response.documents;
 
       return GeneralSuccessState();
     } on AppwriteException catch (e) {

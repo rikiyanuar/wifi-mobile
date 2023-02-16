@@ -5,13 +5,14 @@ import 'package:flutter_libraries/provider.dart';
 import 'package:wifiapp/module/data/appwrite/appwrite_helper.dart';
 import 'package:wifiapp/module/domain/entity/poin_entity.dart';
 import 'package:wifiapp/module/domain/entity/tagihan_entity.dart';
-import 'package:wifiapp/module/external/external.dart';
 import 'package:wifiapp/module/presentation/widget/custom_app_bar.dart';
 
 import '../../../data/local/session_helper.dart';
+import '../../../domain/entity/transaksi_entity.dart';
 import '../../view_model/general_state.dart';
 import '../../view_model/history/history_view_model.dart';
 import 'tagihan_fragment.dart';
+import 'transaksi_fragment.dart';
 
 class HistoryScreen extends StatefulWidget {
   const HistoryScreen({super.key});
@@ -31,6 +32,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
     );
     _getPoin();
     _getTagihan();
+    _getTrx();
     super.initState();
   }
 
@@ -88,7 +90,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
         removeTop: true,
         child: TabBarView(children: [
           _buildListTagihan(),
-          _buildListPoin(),
+          _buildListTrx(),
           _buildListPoin(),
         ]),
       ),
@@ -127,8 +129,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
               Icons.chevron_right,
               color: AppColors.magenta1,
             ),
-            onTap: () => TagihanFragment(context: context, tagihanEntity: data)
-                .showBottomsheet(),
+            onTap: () => TagihanFragment(
+              context: context,
+              tagihanEntity: data,
+            ).showBottomsheet(),
           );
         },
         separatorBuilder: (context, index) => const Padding(
@@ -151,7 +155,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
             dense: true,
             title: Text(
               JurnalAppFormats.dateFormatter(
-                pattern: "EEEE, dd MMMM yyyy - HH:mm",
+                pattern: "EEEE, dd MMM yyyy - HH:mm",
                 date: DateTime.parse(data.tanggal).toLocal(),
               ),
               style: TextStyles.r13,
@@ -171,6 +175,69 @@ class _HistoryScreenState extends State<HistoryScreen> {
     );
   }
 
+  Widget _buildListTrx() {
+    return RefreshIndicator(
+      onRefresh: () => _getTrx(),
+      child: ListView.separated(
+        itemBuilder: (context, index) {
+          final data = TransaksiEntity.fromJson({
+            ..._viewModel!.listTrx[index].data,
+            "id": _viewModel!.listTrx[index].$id,
+          });
+
+          return GestureDetector(
+            behavior: HitTestBehavior.translucent,
+            onTap: () => TransaksiFragment(
+              context: context,
+              transaksiEntity: data,
+            ).showBottomsheet(),
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+              child: Row(children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Nomor Transaksi",
+                        style: TextStyles.r11Black3,
+                      ),
+                      Text(
+                        data.id!.toUpperCase(),
+                        style: TextStyles.r12,
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        data.status.toUpperCase(),
+                        style: TextStyles.m11.copyWith(
+                          color: AppColors.green1,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Text(
+                  JurnalAppFormats.idrMoneyFormat(
+                      value: data.subTotal, pattern: "Rp"),
+                  style: TextStyles.s13,
+                ),
+                const Icon(
+                  Icons.chevron_right,
+                  color: AppColors.magenta1,
+                )
+              ]),
+            ),
+          );
+        },
+        separatorBuilder: (context, index) => const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 14),
+          child: Divider(height: 1),
+        ),
+        itemCount: _viewModel!.listTrx.length,
+      ),
+    );
+  }
+
   _getPoin() async {
     final state = await _viewModel!.getPoin();
 
@@ -182,6 +249,15 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   _getTagihan() async {
     final state = await _viewModel!.getTagihan();
+
+    if (!mounted) return;
+    if (state is GeneralErrorState) {
+      StandardToast.showClientErrorToast(context, message: state.message);
+    }
+  }
+
+  _getTrx() async {
+    final state = await _viewModel!.getTrx();
 
     if (!mounted) return;
     if (state is GeneralErrorState) {
