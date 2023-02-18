@@ -51,7 +51,7 @@ class CartHelperImpl extends CartHelper {
           qtyProduk: qtyList,
           hargaProduk: res.hargaProduk!,
           totalQty: qtyList.reduce((v, e) => v + e),
-          subTotal: res.subTotal! + item.hargaProduk!,
+          subTotal: res.subTotal! + (item.hargaProduk! * item.qtyProduk!),
         );
 
         return await _save(data);
@@ -63,7 +63,7 @@ class CartHelperImpl extends CartHelper {
           qtyProduk: [...res.qtyProduk!, item.qtyProduk!],
           hargaProduk: [...res.hargaProduk!, item.hargaProduk!],
           totalQty: res.totalQty! + item.qtyProduk!,
-          subTotal: res.subTotal! + item.hargaProduk!,
+          subTotal: res.subTotal! + (item.hargaProduk! * item.qtyProduk!),
         );
 
         return await _save(data);
