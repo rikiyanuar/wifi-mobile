@@ -9,6 +9,7 @@ import '../../external/external.dart';
 abstract class CartHelper {
   Future<CartEntity> getAll();
   Future<bool> insertItem(CartItem item);
+  Future<bool> removeItem(CartItem item);
   Future<bool> removeCart();
 }
 
@@ -67,6 +68,38 @@ class CartHelperImpl extends CartHelper {
 
         return await _save(data);
       }
+    }
+  }
+
+  @override
+  Future<bool> removeItem(CartItem item) async {
+    final res = await getAll();
+    final index = res.idProduk!.indexOf(item.idProduk!);
+
+    List<String> idList = res.idProduk!;
+    List<String> namaList = res.namaProduk!;
+    List<int> hargaList = res.hargaProduk!;
+    List<int> qtyList = res.qtyProduk!;
+
+    idList.removeAt(index);
+    namaList.removeAt(index);
+    qtyList.removeAt(index);
+    hargaList.removeAt(index);
+
+    if (idList.isNotEmpty) {
+      final data = CartEntity(
+        totalItem: res.totalItem! - 1,
+        idProduk: idList,
+        namaProduk: namaList,
+        qtyProduk: qtyList,
+        hargaProduk: hargaList,
+        totalQty: res.totalQty! - item.qtyProduk!,
+        subTotal: res.subTotal! - (item.hargaProduk! * item.qtyProduk!),
+      );
+
+      return await _save(data);
+    } else {
+      return removeCart();
     }
   }
 

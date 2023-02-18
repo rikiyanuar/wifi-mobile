@@ -196,11 +196,11 @@ class _CartScreenState extends State<CartScreen> {
             padding: const EdgeInsets.symmetric(vertical: 4),
             child: Row(children: [
               IconButton(
-                onPressed: () {},
+                onPressed: () => _removeItem(index),
                 icon: const Icon(Icons.delete),
                 color: AppColors.magenta1,
               ),
-              _buildItem(nama, harga, qty),
+              _buildItem(index, nama, harga, qty),
               Text(
                 JurnalAppFormats.idrMoneyFormat(value: total, pattern: "Rp"),
                 style: TextStyles.m12,
@@ -217,7 +217,12 @@ class _CartScreenState extends State<CartScreen> {
     );
   }
 
-  Widget _buildItem(String nama, int harga, int qty) {
+  Widget _buildItem(
+    int index,
+    String nama,
+    int harga,
+    int qty,
+  ) {
     return Expanded(
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Text(nama, style: TextStyles.s12),
@@ -230,6 +235,7 @@ class _CartScreenState extends State<CartScreen> {
         Row(children: [
           GestureDetector(
             behavior: HitTestBehavior.translucent,
+            onTap: qty == 1 ? null : () => _changeQty(index, -1),
             child: Icon(
               Icons.remove_circle,
               size: 18,
@@ -245,6 +251,7 @@ class _CartScreenState extends State<CartScreen> {
           ),
           GestureDetector(
             behavior: HitTestBehavior.translucent,
+            onTap: () => _changeQty(index, 1),
             child: const Icon(
               Icons.add_circle,
               size: 18,
@@ -257,7 +264,9 @@ class _CartScreenState extends State<CartScreen> {
   }
 
   Widget _buildRingkasan() {
-    if (_viewModel!.cartEntity == null) {
+    if (_viewModel!.cartEntity == null ||
+        _viewModel!.cartEntity!.totalItem == null ||
+        _viewModel!.cartEntity!.totalItem == 0) {
       return const SizedBox.shrink();
     }
 
@@ -328,6 +337,34 @@ class _CartScreenState extends State<CartScreen> {
     if (!mounted) return;
     if (state is GeneralErrorState) {
       StandardToast.showClientErrorToast(context, message: state.message);
+    }
+  }
+
+  _changeQty(int index, int qty) async {
+    final state = await _viewModel!.changeQty(index, qty);
+
+    if (!mounted) return;
+    if (state is GeneralErrorState) {
+      StandardToast.showClientErrorToast(context, message: state.message);
+    } else if (state is GeneralSuccessState) {
+      _getCartData();
+    }
+  }
+
+  _removeItem(int index) async {
+    final state = await _viewModel!.removeItem(index);
+
+    if (!mounted) return;
+    if (state is GeneralErrorState) {
+      StandardToast.showClientErrorToast(context, message: state.message);
+    } else if (state is GeneralSuccessState) {
+      if (_viewModel!.cartEntity == null ||
+          _viewModel!.cartEntity!.totalItem == null ||
+          _viewModel!.cartEntity!.totalItem == 0) {
+        AppNavigator.pop();
+      } else {
+        _getCartData();
+      }
     }
   }
 

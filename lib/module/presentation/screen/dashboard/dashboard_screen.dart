@@ -83,11 +83,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
       return Container();
     }
     final cart = _viewModel!.cartEntity!;
-    final totalItem = cart.qtyProduk!.reduce((v, e) => v + e);
+    final totalItem = cart.totalQty;
 
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
-      onTap: () => GetIt.I.get<AppRouter>().goToCart(),
+      onTap: () => GetIt.I.get<AppRouter>().goToCart().then((_) => _getCart()),
       child: Container(
         margin:
             EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
@@ -160,9 +160,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
               final base64Img = Uri.parse(data.banner).data;
               Uint8List bytes = base64Img!.contentAsBytes();
 
-              return ClipRRect(
-                borderRadius: const BorderRadius.all(Radius.circular(8)),
-                child: Image.memory(bytes, fit: BoxFit.fill),
+              return GestureDetector(
+                behavior: HitTestBehavior.translucent,
+                onTap: () async {
+                  if (data.url.isNotEmpty) {
+                    final uri = Uri.parse(data.url);
+                    if (await canLaunchUrl(uri)) {
+                      await launchUrl(uri);
+                    }
+                  }
+                },
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.all(Radius.circular(8)),
+                  child: Image.memory(bytes, fit: BoxFit.fill),
+                ),
               );
             }).toList(),
             options: CarouselOptions(

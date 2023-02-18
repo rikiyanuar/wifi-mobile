@@ -90,6 +90,55 @@ class CartViewModel extends JurnalAppChangeNotifier {
     }
   }
 
+  Future<GeneralState> changeQty(int index, int qty) async {
+    try {
+      _isLoading(true);
+      final id = cartEntity!.idProduk![index];
+      final nama = cartEntity!.namaProduk![index];
+      final harga = cartEntity!.hargaProduk![index];
+
+      if (await cartHelper.insertItem(CartItem(
+        idProduk: id,
+        hargaProduk: harga,
+        namaProduk: nama,
+        qtyProduk: qty,
+      ))) {
+        return GeneralSuccessState();
+      } else {
+        return GeneralErrorState();
+      }
+    } catch (e) {
+      return GeneralErrorState(message: e.toString());
+    } finally {
+      _isLoading(false);
+    }
+  }
+
+  Future<GeneralState> removeItem(int index) async {
+    try {
+      _isLoading(true);
+      final id = cartEntity!.idProduk![index];
+      final nama = cartEntity!.namaProduk![index];
+      final harga = cartEntity!.hargaProduk![index];
+      final qty = cartEntity!.qtyProduk![index];
+
+      if (await cartHelper.removeItem(CartItem(
+        idProduk: id,
+        hargaProduk: harga,
+        namaProduk: nama,
+        qtyProduk: qty,
+      ))) {
+        return getCart();
+      } else {
+        return GeneralErrorState();
+      }
+    } catch (e) {
+      return GeneralErrorState(message: e.toString());
+    } finally {
+      _isLoading(false);
+    }
+  }
+
   Future<GeneralState> _removeCart() async {
     try {
       _isLoading(true);
