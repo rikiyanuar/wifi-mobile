@@ -52,8 +52,10 @@ class EditProfileViewModel extends JurnalAppChangeNotifier {
     ValidationMessage.email: "Format email salah",
   };
 
-  EditProfileViewModel(
-      {required this.pelangganEntity, required this.appWriteHelper}) {
+  EditProfileViewModel({
+    required this.pelangganEntity,
+    required this.appWriteHelper,
+  }) {
     form.reset();
     namaControl.updateValue(pelangganEntity.nama);
     nohpControl.updateValue(pelangganEntity.nohp);
@@ -72,7 +74,7 @@ class EditProfileViewModel extends JurnalAppChangeNotifier {
         documentId: pelangganEntity.id!,
         data: {
           "nama": namaControl.value,
-          "nohp": nohpControl.value, // TODO: convert phone to +62
+          "nohp": _convertPhone(nohpControl.value),
           "email": emailControl.value,
           "alamat": alamatControl.value,
           "nik": nikControl.value,
@@ -83,7 +85,8 @@ class EditProfileViewModel extends JurnalAppChangeNotifier {
           email: nikControl.value + AppWriteConstant.emailSuffix,
           password: passwordControl.value);
       await accountHelper.updatePhone(
-          phone: nohpControl.value, password: passwordControl.value);
+          phone: _convertPhone(nohpControl.value),
+          password: passwordControl.value);
 
       return GeneralSuccessState();
     } on AppwriteException catch (e) {
@@ -103,5 +106,19 @@ class EditProfileViewModel extends JurnalAppChangeNotifier {
   _isLoading(bool value) {
     isLoading = value;
     notifyListeners();
+  }
+
+  String _convertPhone(String str) {
+    if (str.startsWith("08")) {
+      return str.replaceRange(0, 2, "+628");
+    } else if (str.startsWith("+628")) {
+      return str;
+    } else if (str.startsWith("628")) {
+      return "+$str";
+    } else if (str.startsWith("8")) {
+      return "+62$str";
+    } else {
+      return str;
+    }
   }
 }
