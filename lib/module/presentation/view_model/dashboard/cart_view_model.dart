@@ -65,6 +65,9 @@ class CartViewModel extends JurnalAppChangeNotifier {
     try {
       _isLoading(true);
       final pelangganId = await sessionHelper.getPelangganId();
+      final userId = await sessionHelper.getUserId();
+
+      /// insert to trx
       await appWriteHelper.addDocuments(AppWriteConstant.transaksiId, data: {
         "pelangganId": pelangganId,
         "status": "dipesan",
@@ -79,6 +82,23 @@ class CartViewModel extends JurnalAppChangeNotifier {
         "cashUsed": cash,
         "nama": _nama,
       });
+
+      /// deduct poin if used > 0
+      if (used > 0) {
+        await appWriteHelper.updateDocument(
+          collectionId: AppWriteConstant.pelangganId,
+          documentId: pelangganId,
+          data: {"poin": poin - used},
+        );
+
+        await appWriteHelper.addDocuments(AppWriteConstant.poinId, data: {
+          "userId": userId,
+          "pelangganId": pelangganId,
+          "nama": _nama,
+          "tanggal": DateTime.now().toIso8601String(),
+          "nominal": -used,
+        });
+      }
 
       return _removeCart();
     } on AppwriteException catch (e) {

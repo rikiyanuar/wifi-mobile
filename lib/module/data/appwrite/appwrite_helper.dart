@@ -19,6 +19,7 @@ abstract class AppWriteHelper {
   Future<Document> getDocuments(String collectionId, String documentId);
   Future<Document> addDocuments(String collectionId,
       {required Map<String, dynamic> data});
+  Future removeDocuments(String collectionId, String documentId);
 }
 
 class AppWriteHelperImpl extends AppWriteHelper {
@@ -91,6 +92,17 @@ class AppWriteHelperImpl extends AppWriteHelper {
       collectionId: collectionId,
       documentId: ID.unique(),
       data: data,
+    );
+
+    return document;
+  }
+
+  @override
+  Future removeDocuments(String collectionId, String documentId) {
+    final document = databaseHelper().deleteDocument(
+      databaseId: AppWriteConstant.databaseId,
+      collectionId: collectionId,
+      documentId: documentId,
     );
 
     return document;

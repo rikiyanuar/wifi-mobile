@@ -188,9 +188,13 @@ class _HistoryScreenState extends State<HistoryScreen> {
           return GestureDetector(
             behavior: HitTestBehavior.translucent,
             onTap: () => TransaksiFragment(
-              context: context,
-              transaksiEntity: data,
-            ).showBottomsheet(),
+                context: context,
+                transaksiEntity: data,
+                refresh: () {
+                  _getPoin();
+                  _getTagihan();
+                  _getTrx();
+                }).showBottomsheet(),
             child: Container(
               padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
               child: Row(children: [
@@ -198,20 +202,12 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        "Nomor Transaksi",
-                        style: TextStyles.r11Black3,
-                      ),
-                      Text(
-                        data.id!.toUpperCase(),
-                        style: TextStyles.r12,
-                      ),
+                      Text("Nomor Transaksi", style: TextStyles.r11Black3),
+                      Text(data.id!.toUpperCase(), style: TextStyles.r12),
                       const SizedBox(height: 6),
                       Text(
                         data.status.toUpperCase(),
-                        style: TextStyles.m11.copyWith(
-                          color: AppColors.green1,
-                        ),
+                        style: TextStyles.m11.copyWith(color: AppColors.green1),
                       ),
                     ],
                   ),

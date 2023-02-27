@@ -295,18 +295,24 @@ class _CartScreenState extends State<CartScreen> {
           ),
         ]),
         const SizedBox(height: 8),
-        Row(children: [
-          Text("Total poin terpakai (50%)", style: TextStyles.r12),
-          const Spacer(),
-          Text(
-            JurnalAppFormats.idrMoneyFormat(
-              value: used,
-              pattern: "-Rp",
+        Visibility(
+          visible: used > 0,
+          child: Row(children: [
+            Text("Total poin terpakai (50%)", style: TextStyles.r12),
+            const Spacer(),
+            Text(
+              JurnalAppFormats.idrMoneyFormat(
+                value: used,
+                pattern: "-Rp",
+              ),
+              style: TextStyles.m12,
             ),
-            style: TextStyles.m12,
-          ),
-        ]),
-        const SizedBox(height: 8),
+          ]),
+        ),
+        Visibility(
+          visible: used > 0,
+          child: const SizedBox(height: 8),
+        ),
         Row(children: [
           Text("Total bayar tunai", style: TextStyles.r12),
           const Spacer(),
