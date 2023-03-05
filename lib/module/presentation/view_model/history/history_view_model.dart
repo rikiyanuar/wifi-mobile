@@ -25,7 +25,7 @@ class HistoryViewModel extends JurnalAppChangeNotifier {
       _isLoading(true);
       final pelangganId = await sessionHelper.getPelangganId();
       final response = await appWriteHelper.listDocuments(
-        AppWriteConstant.poinId,
+        FlavorBaseUrlConfig.instance!.appEnvironment.poinId,
         queries: [
           Query.equal("pelangganId", pelangganId),
           Query.limit(20),
@@ -49,7 +49,7 @@ class HistoryViewModel extends JurnalAppChangeNotifier {
       _isLoading(true);
       final pelangganId = await sessionHelper.getPelangganId();
       final response = await appWriteHelper.listDocuments(
-        AppWriteConstant.tagihanId,
+        FlavorBaseUrlConfig.instance!.appEnvironment.tagihanId,
         queries: [
           Query.equal("pelangganId", pelangganId),
           Query.limit(20),
@@ -73,7 +73,7 @@ class HistoryViewModel extends JurnalAppChangeNotifier {
       _isLoading(true);
       final pelangganId = await sessionHelper.getPelangganId();
       final response = await appWriteHelper.listDocuments(
-        AppWriteConstant.transaksiId,
+        FlavorBaseUrlConfig.instance!.appEnvironment.transaksiId,
         queries: [
           Query.equal("pelangganId", pelangganId),
           Query.orderDesc("\$id"),

@@ -3,8 +3,8 @@ import 'package:flutter_core/core.dart';
 import 'package:flutter_libraries/libraries.dart';
 import 'package:flutter_libraries/provider.dart';
 import 'package:wifiapp/module/data/appwrite/appwrite_helper.dart';
+import 'package:wifiapp/module/external/external.dart';
 
-import '../../../external/router/app_router.dart';
 import '../../view_model/account/account_view_model.dart';
 import '../../view_model/general_state.dart';
 import '../../widget/background.dart';
@@ -127,10 +127,10 @@ class _AccountScreenState extends State<AccountScreen> {
       _buildListTile("Kirim Masukan"),
       const Divider(height: 1),
       _buildListTile(
-        "WIFI App",
+        FlavorBaseUrlConfig.instance!.appEnvironment.appName,
         trailing: Padding(
           padding: const EdgeInsets.only(right: 6),
-          child: Text("v1.0.0", style: TextStyles.l11Black3),
+          child: Text(_viewModel!.appVersion, style: TextStyles.l11Black3),
         ),
       ),
       const SizedBox(height: 32),

@@ -1,0 +1,90 @@
+{
+  "project_info": {
+    "project_number": "272459760497",
+    "project_id": "jurnal-app-official",
+    "storage_bucket": "jurnal-app-official.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:272459760497:android:b54afba2fe03d5c1686cd0",
+        "android_client_info": {
+          "package_name": "com.jurnalapp.penjualan"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "272459760497-lgv6qg11j8aq5e95stbi332n4dlbpvu8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.jurnalapp.penjualan",
+            "certificate_hash": "3f50d117358ff53b9b53b670df7137f8b4067412"
+          }
+        },
+        {
+          "client_id": "272459760497-h2k8otuiatagutj5t7k4jsliouhgpgqg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDF_cXBIKkoLnuZZwKJL0vnQ2tw-cukIzI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "272459760497-h2k8otuiatagutj5t7k4jsliouhgpgqg.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "272459760497-43u6tvce8a9nc7527mhaaqgn7bh9sesg.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.jurnalapp.penjualan"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:272459760497:android:68c1558786c9b909686cd0",
+        "android_client_info": {
+          "package_name": "com.jurnalapp.wifiapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "272459760497-h2k8otuiatagutj5t7k4jsliouhgpgqg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDF_cXBIKkoLnuZZwKJL0vnQ2tw-cukIzI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "272459760497-h2k8otuiatagutj5t7k4jsliouhgpgqg.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "272459760497-43u6tvce8a9nc7527mhaaqgn7bh9sesg.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.jurnalapp.penjualan"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

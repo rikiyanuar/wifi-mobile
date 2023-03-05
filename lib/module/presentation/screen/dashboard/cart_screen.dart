@@ -65,7 +65,7 @@ class _CartScreenState extends State<CartScreen> {
                 Expanded(
                   child: Stack(children: [
                     SvgPicture.asset(
-                      "assets/images/bc_convetti.svg",
+                      AppImage.bgConvetti,
                       width: 1.sw,
                     ),
                     Column(children: [

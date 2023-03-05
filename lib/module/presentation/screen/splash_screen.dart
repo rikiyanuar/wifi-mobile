@@ -44,10 +44,19 @@ class _SplashScreenState extends State<SplashScreen> {
           ),
           width: double.infinity,
           height: double.infinity,
-          alignment: Alignment.center,
-          child: Text(
-            "WIFI App",
-            style: TextStyles.h20.copyWith(color: WifiColor.accent2),
+          child: Stack(
+            alignment: const Alignment(0, -0.1),
+            children: [
+              const Material(
+                color: Colors.transparent,
+                elevation: 1,
+                child: SizedBox(
+                  width: double.infinity,
+                  height: double.infinity,
+                ),
+              ),
+              Image.asset(AppImage.logoWhite, width: 120),
+            ],
           ),
         ),
       ),

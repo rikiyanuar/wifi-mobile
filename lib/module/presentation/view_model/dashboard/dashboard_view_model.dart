@@ -30,8 +30,8 @@ class DashboardViewModel extends JurnalAppChangeNotifier {
   Future<GeneralState> getBanner() async {
     try {
       _isLoading(true);
-      final response =
-          await appWriteHelper.listDocuments(AppWriteConstant.bannerId);
+      final response = await appWriteHelper
+          .listDocuments(FlavorBaseUrlConfig.instance!.appEnvironment.bannerId);
       if (response.total > 0) {
         listBanner = response.documents;
       }
@@ -49,8 +49,8 @@ class DashboardViewModel extends JurnalAppChangeNotifier {
   Future<GeneralState> getProduk() async {
     try {
       _isLoading(true);
-      final response =
-          await appWriteHelper.listDocuments(AppWriteConstant.produkId);
+      final response = await appWriteHelper
+          .listDocuments(FlavorBaseUrlConfig.instance!.appEnvironment.produkId);
       if (response.total > 0) {
         listProduk = response.documents;
       }
@@ -102,7 +102,7 @@ class DashboardViewModel extends JurnalAppChangeNotifier {
     try {
       _isLoading(true);
       final response = await appWriteHelper.listDocuments(
-        AppWriteConstant.pelangganId,
+        FlavorBaseUrlConfig.instance!.appEnvironment.pelangganId,
         queries: [
           Query.equal("userID", userID),
         ],
@@ -127,7 +127,7 @@ class DashboardViewModel extends JurnalAppChangeNotifier {
     try {
       _isLoading(true);
       final response = await appWriteHelper.listDocuments(
-        AppWriteConstant.tagihanId,
+        FlavorBaseUrlConfig.instance!.appEnvironment.tagihanId,
         queries: [
           Query.equal("pelangganId", pelangganId),
         ],

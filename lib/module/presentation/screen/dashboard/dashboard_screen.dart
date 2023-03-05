@@ -60,7 +60,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
             widget: Column(children: [
               AppBar(
                 backgroundColor: Colors.transparent,
-                title: const Text("WIFI App"),
+                title: Text(
+                  FlavorBaseUrlConfig.instance!.appEnvironment.appName,
+                ),
                 elevation: 0,
               ),
               Expanded(

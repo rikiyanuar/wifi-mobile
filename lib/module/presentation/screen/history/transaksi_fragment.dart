@@ -244,35 +244,36 @@ class TransaksiFragment {
     // TODO: add loading state/loading dialog
 
     /// remove document
-    await GetIt.I
-        .get<AppWriteHelper>()
-        .removeDocuments(AppWriteConstant.transaksiId, transaksiEntity.id!);
+    await GetIt.I.get<AppWriteHelper>().removeDocuments(
+        FlavorBaseUrlConfig.instance!.appEnvironment.transaksiId,
+        transaksiEntity.id!);
 
     /// revert balance if used exist
     if (transaksiEntity.poinUsed > 0) {
       final pelangganId = await GetIt.I.get<SessionHelper>().getPelangganId();
       final userId = await GetIt.I.get<SessionHelper>().getUserId();
-      final response = await GetIt.I
-          .get<AppWriteHelper>()
-          .getDocuments(AppWriteConstant.pelangganId, pelangganId);
+      final response = await GetIt.I.get<AppWriteHelper>().getDocuments(
+          FlavorBaseUrlConfig.instance!.appEnvironment.pelangganId,
+          pelangganId);
       final pelanggan = PelangganEntity.fromJson(response.data);
 
       /// update poin
       await GetIt.I.get<AppWriteHelper>().updateDocument(
-          collectionId: AppWriteConstant.pelangganId,
+          collectionId:
+              FlavorBaseUrlConfig.instance!.appEnvironment.pelangganId,
           documentId: pelangganId,
           data: {"poin": pelanggan.poin + transaksiEntity.poinUsed});
 
       /// insert poin history
-      await GetIt.I
-          .get<AppWriteHelper>()
-          .addDocuments(AppWriteConstant.poinId, data: {
-        "userId": userId,
-        "pelangganId": pelangganId,
-        "nama": pelanggan.nama,
-        "tanggal": DateTime.now().toIso8601String(),
-        "nominal": transaksiEntity.poinUsed,
-      });
+      await GetIt.I.get<AppWriteHelper>().addDocuments(
+          FlavorBaseUrlConfig.instance!.appEnvironment.poinId,
+          data: {
+            "userId": userId,
+            "pelangganId": pelangganId,
+            "nama": pelanggan.nama,
+            "tanggal": DateTime.now().toIso8601String(),
+            "nominal": transaksiEntity.poinUsed,
+          });
 
       refresh();
 

@@ -3,7 +3,7 @@ import 'package:flutter_core/core.dart';
 import 'package:flutter_libraries/libraries.dart';
 import 'package:flutter_libraries/provider.dart';
 import 'package:wifiapp/module/data/local/session_helper.dart';
-import 'package:wifiapp/module/external/router/app_router.dart';
+import 'package:wifiapp/module/external/external.dart';
 import 'package:wifiapp/module/presentation/view_model/general_state.dart';
 
 import '../../data/appwrite/appwrite_helper.dart';
@@ -41,24 +41,26 @@ class _LoginScreenState extends State<LoginScreen> {
           body: LoadingIndicator(
             isLoading: viewModel.isLoading,
             child: Background(
-              widget: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text("LOGO WIFI APP", style: TextStyles.b16White),
-                  Container(
-                    margin: const EdgeInsets.all(24),
-                    padding: const EdgeInsets.all(16),
-                    decoration: const BoxDecoration(
-                      color: AppColors.white,
-                      borderRadius: BorderRadius.all(Radius.circular(12)),
-                    ),
-                    child: ReactiveForm(
-                      formGroup: _viewModel!.form,
-                      child: _buildForm(),
-                    ),
-                  )
-                ],
+              widget: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Image.asset(AppImage.logoWhite, width: 100),
+                    Container(
+                      margin: const EdgeInsets.fromLTRB(24, 18, 24, 24),
+                      padding: const EdgeInsets.all(16),
+                      decoration: const BoxDecoration(
+                        color: AppColors.white,
+                        borderRadius: BorderRadius.all(Radius.circular(12)),
+                      ),
+                      child: ReactiveForm(
+                        formGroup: _viewModel!.form,
+                        child: _buildForm(),
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
           ),
@@ -92,7 +94,7 @@ class _LoginScreenState extends State<LoginScreen> {
           hintText: "Password",
           isPasswordType: true,
         ),
-        const SizedBox(height: 38),
+        const SizedBox(height: 28),
         GeneralButton(
           text: "Login",
           onTap: () => _login(),

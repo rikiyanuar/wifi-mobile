@@ -44,7 +44,7 @@ class CartViewModel extends JurnalAppChangeNotifier {
       _isLoading(true);
       final pelangganId = await sessionHelper.getPelangganId();
       final response = await appWriteHelper.getDocuments(
-        AppWriteConstant.pelangganId,
+        FlavorBaseUrlConfig.instance!.appEnvironment.pelangganId,
         pelangganId,
       );
       final pelanggan = PelangganEntity.fromJson(response.data);
@@ -68,36 +68,41 @@ class CartViewModel extends JurnalAppChangeNotifier {
       final userId = await sessionHelper.getUserId();
 
       /// insert to trx
-      await appWriteHelper.addDocuments(AppWriteConstant.transaksiId, data: {
-        "pelangganId": pelangganId,
-        "status": "dipesan",
-        "totalQty": cartEntity!.totalQty,
-        "subTotal": cartEntity!.subTotal,
-        "namaProduk": cartEntity!.namaProduk,
-        "qtyProduk": cartEntity!.qtyProduk,
-        "hargaProduk": cartEntity!.hargaProduk,
-        "idProduk": cartEntity!.idProduk,
-        "tanggal": DateTime.now().toIso8601String(),
-        "poinUsed": used,
-        "cashUsed": cash,
-        "nama": _nama,
-      });
+      await appWriteHelper.addDocuments(
+          FlavorBaseUrlConfig.instance!.appEnvironment.transaksiId,
+          data: {
+            "pelangganId": pelangganId,
+            "status": "dipesan",
+            "totalQty": cartEntity!.totalQty,
+            "subTotal": cartEntity!.subTotal,
+            "namaProduk": cartEntity!.namaProduk,
+            "qtyProduk": cartEntity!.qtyProduk,
+            "hargaProduk": cartEntity!.hargaProduk,
+            "idProduk": cartEntity!.idProduk,
+            "tanggal": DateTime.now().toIso8601String(),
+            "poinUsed": used,
+            "cashUsed": cash,
+            "nama": _nama,
+          });
 
       /// deduct poin if used > 0
       if (used > 0) {
         await appWriteHelper.updateDocument(
-          collectionId: AppWriteConstant.pelangganId,
+          collectionId:
+              FlavorBaseUrlConfig.instance!.appEnvironment.pelangganId,
           documentId: pelangganId,
           data: {"poin": poin - used},
         );
 
-        await appWriteHelper.addDocuments(AppWriteConstant.poinId, data: {
-          "userId": userId,
-          "pelangganId": pelangganId,
-          "nama": _nama,
-          "tanggal": DateTime.now().toIso8601String(),
-          "nominal": -used,
-        });
+        await appWriteHelper.addDocuments(
+            FlavorBaseUrlConfig.instance!.appEnvironment.poinId,
+            data: {
+              "userId": userId,
+              "pelangganId": pelangganId,
+              "nama": _nama,
+              "tanggal": DateTime.now().toIso8601String(),
+              "nominal": -used,
+            });
       }
 
       return _removeCart();

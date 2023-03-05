@@ -1,7 +1,7 @@
 import 'package:appwrite/appwrite.dart';
 import 'package:appwrite/models.dart' show DocumentList, Document;
-
-import '../../external/constant/appwrite_constant.dart';
+import 'package:flutter_core/core.dart';
+import 'package:wifiapp/module/external/external.dart';
 
 abstract class AppWriteHelper {
   Account accountHelper();
@@ -47,7 +47,7 @@ class AppWriteHelperImpl extends AppWriteHelper {
   @override
   Future<DocumentList> listDocuments(collectionId, {List<String>? queries}) {
     final document = databaseHelper().listDocuments(
-      databaseId: AppWriteConstant.databaseId,
+      databaseId: FlavorBaseUrlConfig.instance!.appEnvironment.databaseId,
       collectionId: collectionId,
       queries: queries,
     );
@@ -62,7 +62,7 @@ class AppWriteHelperImpl extends AppWriteHelper {
     dynamic data,
   }) async {
     final document = databaseHelper().updateDocument(
-      databaseId: AppWriteConstant.databaseId,
+      databaseId: FlavorBaseUrlConfig.instance!.appEnvironment.databaseId,
       documentId: documentId,
       collectionId: collectionId,
       data: data,
@@ -74,7 +74,7 @@ class AppWriteHelperImpl extends AppWriteHelper {
   @override
   Future<Document> getDocuments(collectionId, documentId) {
     final document = databaseHelper().getDocument(
-      databaseId: AppWriteConstant.databaseId,
+      databaseId: FlavorBaseUrlConfig.instance!.appEnvironment.databaseId,
       collectionId: collectionId,
       documentId: documentId,
     );
@@ -88,7 +88,7 @@ class AppWriteHelperImpl extends AppWriteHelper {
     required Map<String, dynamic> data,
   }) {
     final document = databaseHelper().createDocument(
-      databaseId: AppWriteConstant.databaseId,
+      databaseId: FlavorBaseUrlConfig.instance!.appEnvironment.databaseId,
       collectionId: collectionId,
       documentId: ID.unique(),
       data: data,
@@ -100,7 +100,7 @@ class AppWriteHelperImpl extends AppWriteHelper {
   @override
   Future removeDocuments(String collectionId, String documentId) {
     final document = databaseHelper().deleteDocument(
-      databaseId: AppWriteConstant.databaseId,
+      databaseId: FlavorBaseUrlConfig.instance!.appEnvironment.databaseId,
       collectionId: collectionId,
       documentId: documentId,
     );
@@ -109,7 +109,7 @@ class AppWriteHelperImpl extends AppWriteHelper {
   }
 
   static _client() => Client()
-      .setEndpoint(AppWriteConstant.host)
-      .setProject(AppWriteConstant.projectId)
+      .setEndpoint(FlavorBaseUrlConfig.instance!.appEnvironment.host)
+      .setProject(FlavorBaseUrlConfig.instance!.appEnvironment.projectId)
       .setSelfSigned(status: true);
 }

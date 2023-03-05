@@ -1,5 +1,6 @@
 import 'package:appwrite/appwrite.dart';
 import 'package:flutter_core/core.dart';
+import 'package:flutter_libraries/libraries.dart';
 import 'package:wifiapp/module/domain/entity/pelanggan_entity.dart';
 import 'package:wifiapp/module/external/external.dart';
 
@@ -22,8 +23,11 @@ class AccountViewModel extends JurnalAppChangeNotifier {
   });
   bool isLoading = false;
   String nama = "";
+  String appVersion = "";
 
-  AccountViewModel({required this.appWriteHelper});
+  AccountViewModel({required this.appWriteHelper}) {
+    _getVersion();
+  }
 
   Future<GeneralState> getAccount() async {
     final accountHelper = appWriteHelper.accountHelper();
@@ -64,7 +68,7 @@ class AccountViewModel extends JurnalAppChangeNotifier {
     try {
       _isLoading(true);
       final response = await appWriteHelper.listDocuments(
-        AppWriteConstant.pelangganId,
+        FlavorBaseUrlConfig.instance!.appEnvironment.pelangganId,
         queries: [Query.equal("userID", userId)],
       );
       dataAccount = PelangganEntity.fromJson({
@@ -84,6 +88,12 @@ class AccountViewModel extends JurnalAppChangeNotifier {
 
   _isLoading(bool value) {
     isLoading = value;
+    notifyListeners();
+  }
+
+  _getVersion() async {
+    final packageInfo = await PackageInfo.fromPlatform();
+    appVersion = packageInfo.version;
     notifyListeners();
   }
 }

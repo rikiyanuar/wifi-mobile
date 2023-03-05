@@ -70,7 +70,7 @@ class EditProfileViewModel extends JurnalAppChangeNotifier {
     try {
       _isLoading(true);
       await appWriteHelper.updateDocument(
-        collectionId: AppWriteConstant.pelangganId,
+        collectionId: FlavorBaseUrlConfig.instance!.appEnvironment.pelangganId,
         documentId: pelangganEntity.id!,
         data: {
           "nama": namaControl.value,

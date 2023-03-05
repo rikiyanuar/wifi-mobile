@@ -72,7 +72,7 @@ class LoginViewModel extends JurnalAppChangeNotifier {
     try {
       _isLoading(true);
       final response = await appWriteHelper.listDocuments(
-        AppWriteConstant.pelangganId,
+        FlavorBaseUrlConfig.instance!.appEnvironment.pelangganId,
         queries: [Query.equal("userID", userId)],
       );
 
