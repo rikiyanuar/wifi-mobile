@@ -45,11 +45,9 @@ class LoginViewModel extends JurnalAppChangeNotifier {
 
     try {
       _isLoading(true);
-      // TODO: change to get from form
       final response = await accountHelper.createEmailSession(
-        email:
-            "3206170909890001@wifi.com", //emailControl.value+AppWriteConstant.emailSuffix,
-        password: "Qwerty123", // passwordControl.value,
+        email: emailControl.value + AppWriteConstant.emailSuffix,
+        password: passwordControl.value,
       );
 
       return _getPelanggan(response.userId);
