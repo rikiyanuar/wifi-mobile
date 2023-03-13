@@ -100,4 +100,14 @@ extension AppEnvironmentText on AppEnvironment {
         return "63cd67f8607d64a62c8f";
     }
   }
+
+  String get privacyPolicy {
+    switch (this) {
+      case AppEnvironment.prod:
+        return "https://www.privacypolicyonline.com/live.php?token=6hXrV8RL3HKaKpPgRGUtEBXSrlitphNp";
+      case AppEnvironment.dev:
+      default:
+        return "https://www.privacypolicyonline.com/live.php?token=6hXrV8RL3HKaKpPgRGUtEBXSrlitphNp";
+    }
+  }
 }

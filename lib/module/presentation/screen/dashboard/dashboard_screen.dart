@@ -133,10 +133,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
         borderRadius: const BorderRadius.vertical(top: Radius.circular(10)),
         child: Container(
           width: 1.sw,
-          color: _viewModel!.listBanner.isNotEmpty
-              ? AppColors.white
-              : Colors.transparent,
-          padding: const EdgeInsets.only(bottom: 60),
+          color: AppColors.white,
+          padding: EdgeInsets.only(
+            bottom: 60,
+            top: _viewModel!.listBanner.isNotEmpty ? 0 : 14,
+          ),
           child: _buildBackdrop(),
         ),
       ),
@@ -287,7 +288,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   Widget _buildCard() {
     if (_viewModel!.tagihanEntity == null) {
-      return const SizedBox.shrink();
+      return _emptyCard();
     }
 
     final tagihan = _viewModel!.tagihanEntity == null
@@ -440,7 +441,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     if (!mounted) return;
     if (state is GeneralErrorState) {
-      StandardToast.showClientErrorToast(context, message: state.message);
+      StandardToast.showClientErrorToast(
+        context,
+        message: state.message,
+        marginBottom: 70,
+      );
     }
   }
 
@@ -449,7 +454,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     if (!mounted) return;
     if (state is GeneralErrorState) {
-      StandardToast.showClientErrorToast(context, message: state.message);
+      StandardToast.showClientErrorToast(
+        context,
+        message: state.message,
+        marginBottom: 70,
+      );
     }
   }
 
@@ -458,7 +467,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     if (!mounted) return;
     if (state is GeneralErrorState) {
-      StandardToast.showClientErrorToast(context, message: state.message);
+      StandardToast.showClientErrorToast(
+        context,
+        message: state.message,
+        marginBottom: 70,
+      );
     }
   }
 
@@ -467,7 +480,29 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     if (!mounted) return;
     if (state is GeneralErrorState) {
-      StandardToast.showClientErrorToast(context, message: state.message);
+      StandardToast.showClientErrorToast(
+        context,
+        message: state.message,
+        marginBottom: 70,
+      );
     }
+  }
+
+  Widget _emptyCard() {
+    return Material(
+      elevation: 4,
+      borderRadius: const BorderRadius.all(Radius.circular(8)),
+      color: Colors.transparent,
+      child: ClipRRect(
+        borderRadius: const BorderRadius.all(Radius.circular(8)),
+        child: Container(
+          width: double.infinity,
+          height: 120,
+          color: AppColors.white,
+          alignment: Alignment.center,
+          child: const Text("Tagihan anda belum tersedia"),
+        ),
+      ),
+    );
   }
 }

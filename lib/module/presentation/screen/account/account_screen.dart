@@ -122,9 +122,19 @@ class _AccountScreenState extends State<AccountScreen> {
         ),
       ),
       const SizedBox(height: 6),
-      _buildListTile("Kebijakan Privasi"),
+      _buildListTile("Kebijakan Privasi", onTap: () async {
+        final url = Uri.parse(
+            FlavorBaseUrlConfig.instance!.appEnvironment.privacyPolicy);
+        if (await canLaunchUrl(url)) {
+          await launchUrl(url);
+        }
+      }),
       const Divider(height: 1),
-      _buildListTile("Kirim Masukan"),
+      _buildListTile(
+        "Kirim Masukan",
+        onTap: () =>
+            StandardToast.info(context, "Coming soon!", marginBottom: 70),
+      ),
       const Divider(height: 1),
       _buildListTile(
         FlavorBaseUrlConfig.instance!.appEnvironment.appName,
@@ -228,10 +238,15 @@ class _AccountScreenState extends State<AccountScreen> {
                   const SizedBox(height: 4),
                   Padding(
                     padding: const EdgeInsets.only(left: 14),
-                    child: Text(
-                      _viewModel!.dataAccount.paket.first,
-                      style: TextStyles.s13,
-                    ),
+                    child: _viewModel!.dataAccount.paket.isEmpty
+                        ? Text(
+                            "Belum diisi Admin",
+                            style: TextStyles.s11,
+                          )
+                        : Text(
+                            _viewModel!.dataAccount.paket.first,
+                            style: TextStyles.s13,
+                          ),
                   ),
                 ],
               ),

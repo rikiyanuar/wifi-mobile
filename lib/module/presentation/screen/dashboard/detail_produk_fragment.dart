@@ -124,12 +124,16 @@ class DetailProdukFragment {
       if (!mounted) return;
       if (res) {
         AppNavigator.pop();
-        StandardToast.success(context, "Berhasil ditambahkan ke keranjang");
+        StandardToast.success(
+          context,
+          "Berhasil ditambahkan ke keranjang",
+          marginBottom: 120,
+        );
       } else {
-        StandardToast.showClientErrorToast(context);
+        StandardToast.showClientErrorToast(context, marginBottom: 70);
       }
     } catch (e) {
-      StandardToast.showClientErrorToast(context);
+      StandardToast.showClientErrorToast(context, marginBottom: 70);
     }
   }
 }

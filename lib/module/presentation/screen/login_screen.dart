@@ -41,26 +41,28 @@ class _LoginScreenState extends State<LoginScreen> {
           body: LoadingIndicator(
             isLoading: viewModel.isLoading,
             child: Background(
-              widget: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Image.asset(AppImage.logoWhite, width: 100),
-                    Container(
-                      margin: const EdgeInsets.fromLTRB(24, 18, 24, 24),
-                      padding: const EdgeInsets.all(16),
-                      decoration: const BoxDecoration(
-                        color: AppColors.white,
-                        borderRadius: BorderRadius.all(Radius.circular(12)),
-                      ),
-                      child: ReactiveForm(
-                        formGroup: _viewModel!.form,
-                        child: _buildForm(),
-                      ),
-                    )
-                  ],
-                ),
+              widget: Column(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    FlavorBaseUrlConfig.instance!.appEnvironment.appName
+                        .toUpperCase(),
+                    style: TextStyles.b18.copyWith(color: AppColors.white),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.fromLTRB(24, 18, 24, 24),
+                    padding: const EdgeInsets.all(16),
+                    decoration: const BoxDecoration(
+                      color: AppColors.white,
+                      borderRadius: BorderRadius.all(Radius.circular(12)),
+                    ),
+                    child: ReactiveForm(
+                      formGroup: _viewModel!.form,
+                      child: _buildForm(),
+                    ),
+                  )
+                ],
               ),
             ),
           ),
